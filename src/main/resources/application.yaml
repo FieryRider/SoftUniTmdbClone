@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tmdb?allowPublicKeyRetrieval=true&createIfNotExist=true
+    username: root
+    password: admdb
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+    open-in-view: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+logging:
+  level:
+    org:
+      root: WARN
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor: TRACE
+    blog: WARN
+#server:
+#  port: 8000
