@@ -1,4 +1,4 @@
-package com.softuni.tmdbclone;
+package com.fieryrider.tmdbclone;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

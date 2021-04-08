@@ -1,0 +1,46 @@
+package com.fieryrider.tmdbclone.models.entities;
+
+import com.fieryrider.tmdbclone.models.entities.enums.Genre;
+import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Set;
+
+@Entity
+@Table(name = "movies")
+public class Movie extends Show {
+    @Column(nullable = false)
+    private MovieStatus status;
+    @Column(nullable = false)
+    private BigDecimal budget;
+    private BigDecimal revenue;
+    @Column(name = "release_date", nullable = false)
+    private LocalDate releaseDate;
+
+    public Movie() {
+    }
+
+    public Movie(MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
+        this.status = status;
+        this.budget = budget;
+        this.releaseDate = releaseDate;
+    }
+
+    public Movie(String title, String overview, int rating, String posterUrl, String officialLanguage, Set<Genre> genres, MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
+        super(title, overview, rating, posterUrl, officialLanguage, genres);
+        this.status = status;
+        this.budget = budget;
+        this.releaseDate = releaseDate;
+    }
+
+    public Movie(String title, String overview, int rating, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers, MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
+        super(title, overview, rating, posterUrl, officialLanguage, genres, cast, producers, directors, writers);
+        this.status = status;
+        this.budget = budget;
+        this.releaseDate = releaseDate;
+    }
+}
