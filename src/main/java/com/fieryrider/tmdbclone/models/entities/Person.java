@@ -29,17 +29,17 @@ public class Person extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PersonRole mainRole;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Show> knownFor;
-    @ManyToMany(mappedBy = "cast")
+    @ManyToMany(mappedBy = "cast", fetch = FetchType.EAGER)
     private Set<Show> acting;
-    @ManyToMany(mappedBy = "producers")
+    @ManyToMany(mappedBy = "producers", fetch = FetchType.EAGER)
     private Set<Show> producing;
-    @ManyToMany(mappedBy = "writers")
+    @ManyToMany(mappedBy = "writers", fetch = FetchType.EAGER)
     private Set<Show> writing;
-    @ManyToMany(mappedBy = "directors")
+    @ManyToMany(mappedBy = "directors", fetch = FetchType.EAGER)
     private Set<Show> directing;
-    @OneToMany(mappedBy = "from")
+    @OneToMany(mappedBy = "from", fetch = FetchType.EAGER)
     private Set<Character> characters;
 
     public String getName() {

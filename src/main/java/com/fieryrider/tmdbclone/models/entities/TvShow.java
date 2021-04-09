@@ -40,15 +40,15 @@ public class TvShow extends Show {
     public TvShow() {
     }
 
-    public TvShow(String title, String overview, int rating, String posterUrl, String officialLanguage, Set<Genre> genres, TvShowType type, TvShowStatus status, String network) {
-        super(title, overview, rating, posterUrl, officialLanguage, genres);
+    public TvShow(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, TvShowType type, TvShowStatus status, String network) {
+        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres);
         this.type = type;
         this.status = status;
         this.network = network;
     }
 
-    public TvShow(String title, String overview, int rating, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers, TvShowType type, TvShowStatus status, String network) {
-        super(title, overview, rating, posterUrl, officialLanguage, genres, cast, producers, directors, writers);
+    public TvShow(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers, TvShowType type, TvShowStatus status, String network) {
+        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast, producers, directors, writers);
         this.type = type;
         this.status = status;
         this.network = network;

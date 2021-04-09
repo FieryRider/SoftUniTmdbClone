@@ -16,37 +16,39 @@ public abstract class Show extends BaseEntity {
 
     private int rating;
 
+    private int releaseYear;
+
     @Column(name = "poster_url", nullable = false)
     private String posterUrl;
 
     @Column(name = "official_language", nullable = false)
     private String officialLanguage;
 
-    @ElementCollection(targetClass = Genre.class)
+    @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "show_id"))
     @Column(name = "genre", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Genre> genres;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "shows_cast",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id"))
     private Set<Person> cast;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "shows_producers",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "producer_id", referencedColumnName = "id"))
     private Set<Person> producers;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "shows_directors",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id"))
     private Set<Person> directors;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "shows_writers",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "writer_id", referencedColumnName = "id"))
@@ -75,6 +77,15 @@ public abstract class Show extends BaseEntity {
     public void setRating(int rating) {
         this.rating = rating;
     }
+
+    public int getReleaseYear() {
+        return this.releaseYear;
+    }
+
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
 
     public String getPosterUrl() {
         return this.posterUrl;
@@ -135,19 +146,21 @@ public abstract class Show extends BaseEntity {
     public Show() {
     }
 
-    public Show(String title, String overview, int rating, String posterUrl, String officialLanguage, Set<Genre> genres) {
+    public Show(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres) {
         this.title = title;
         this.overview = overview;
         this.rating = rating;
+        this.releaseYear = releaseYear;
         this.posterUrl = posterUrl;
         this.officialLanguage = officialLanguage;
         this.genres = genres;
     }
 
-    public Show(String title, String overview, int rating, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers) {
+    public Show(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers) {
         this.title = title;
         this.overview = overview;
         this.rating = rating;
+        this.releaseYear = releaseYear;
         this.posterUrl = posterUrl;
         this.officialLanguage = officialLanguage;
         this.genres = genres;
