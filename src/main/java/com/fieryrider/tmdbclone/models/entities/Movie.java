@@ -21,6 +21,38 @@ public class Movie extends Show {
     @Column(name = "release_date", nullable = false)
     private LocalDate releaseDate;
 
+    public MovieStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(MovieStatus status) {
+        this.status = status;
+    }
+
+    public BigDecimal getBudget() {
+        return this.budget;
+    }
+
+    public void setBudget(BigDecimal budget) {
+        this.budget = budget;
+    }
+
+    public BigDecimal getRevenue() {
+        return this.revenue;
+    }
+
+    public void setRevenue(BigDecimal revenue) {
+        this.revenue = revenue;
+    }
+
+    public LocalDate getReleaseDate() {
+        return this.releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     public Movie() {
     }
 

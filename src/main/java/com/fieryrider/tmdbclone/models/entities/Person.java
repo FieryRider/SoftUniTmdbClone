@@ -15,6 +15,7 @@ public class Person extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private int age;
+    @Column(columnDefinition = "TEXT")
     private String biography;
     @Column(name = "place_of_birth")
     private String placeOfBirth;
