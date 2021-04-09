@@ -1,5 +1,9 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
 import java.time.LocalDate;
 
 public class BasicMovieDto {
@@ -11,6 +15,8 @@ public class BasicMovieDto {
 
     private String posterUrl;
 
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T00:00:00.000Z'")
     private LocalDate releaseDate;
 
     public String getId() {
