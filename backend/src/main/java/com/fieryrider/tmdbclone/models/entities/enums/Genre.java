@@ -6,6 +6,7 @@ public enum Genre {
     ANIMATION("Animation"),
     COMEDY("Comedy"),
     CRIME("Crime"),
+    DRAMA("Drama"),
     FANTASY("Fantasy"),
     HISTORICAL("Historical"),
     HORROR("Horror"),
