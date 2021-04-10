@@ -37,6 +37,14 @@ public class TvShow extends Show {
         this.network = network;
     }
 
+    public TvShowStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(TvShowStatus status) {
+        this.status = status;
+    }
+
     public TvShow() {
     }
 
