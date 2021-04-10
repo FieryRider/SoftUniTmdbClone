@@ -3,7 +3,7 @@ package com.fieryrider.tmdbclone.web;
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.BasicMovieDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.MovieAddDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.MovieDetailsDto;
 import com.fieryrider.tmdbclone.services.MovieService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,10 +41,10 @@ public class MoviesController {
     }
 
     @PostMapping
-    public ResponseEntity<EntityIdDto> createMovie(@Valid @RequestBody MovieAddDto movieAddDto,
+    public ResponseEntity<EntityIdDto> createMovie(@Valid @RequestBody MovieCreateDto movieCreateDto,
                                               UriComponentsBuilder uriComponentsBuilder) {
         try {
-            EntityIdDto movieId = this.movieService.add(movieAddDto);
+            EntityIdDto movieId = this.movieService.add(movieCreateDto);
             return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(movieId);
         } catch (NoSuchCastFound | NoSuchDirectorFound | NoSuchProducerFound | NoSuchWriterFound ex) {
             return ResponseEntity.notFound().build();

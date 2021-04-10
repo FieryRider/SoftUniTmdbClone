@@ -2,6 +2,7 @@ package com.fieryrider.tmdbclone.services.impl;
 
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.*;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.entities.Movie;
 import com.fieryrider.tmdbclone.models.entities.Person;
 import com.fieryrider.tmdbclone.repositories.MovieRepository;
@@ -57,34 +58,34 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public EntityIdDto add(MovieAddDto movieAddDto) {
-        Movie movie = this.modelMapper.map(movieAddDto, Movie.class);
+    public EntityIdDto add(MovieCreateDto movieCreateDto) {
+        Movie movie = this.modelMapper.map(movieCreateDto, Movie.class);
         Set<Person> cast = new HashSet<>();
         Set<Person> producers = new HashSet<>();
         Set<Person> directors = new HashSet<>();
         Set<Person> writers = new HashSet<>();
-        for (String producerId : movieAddDto.getProducers()) {
+        for (String producerId : movieCreateDto.getProducers()) {
             try {
                 producers.add(this.personService.getPersonById(producerId));
             } catch (NoSuchElementException ex) {
                 throw new NoSuchProducerFound();
             }
         }
-        for (String directorId : movieAddDto.getDirectors()) {
+        for (String directorId : movieCreateDto.getDirectors()) {
             try {
                 directors.add(this.personService.getPersonById(directorId));
             } catch (NoSuchElementException ex) {
                 throw new NoSuchDirectorFound();
             }
         }
-        for (String writerId : movieAddDto.getWriters()) {
+        for (String writerId : movieCreateDto.getWriters()) {
             try {
                 writers.add(this.personService.getPersonById(writerId));
             } catch (NoSuchElementException ex) {
                 throw new NoSuchWriterFound();
             }
         }
-        for (String actorId : movieAddDto.getCast()) {
+        for (String actorId : movieCreateDto.getCast()) {
             try {
                 cast.add(this.personService.getPersonById(actorId));
             } catch (NoSuchElementException ex) {

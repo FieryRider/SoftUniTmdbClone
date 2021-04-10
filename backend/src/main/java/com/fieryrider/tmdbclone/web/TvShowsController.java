@@ -3,7 +3,7 @@ package com.fieryrider.tmdbclone.web;
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.TvShowAddDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.services.TvShowService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -41,10 +40,9 @@ public class TvShowsController {
     }
 
     @PostMapping
-    public ResponseEntity<EntityIdDto> createTvShow(@Valid @RequestBody TvShowAddDto tvShowAddDto,
-                                                   UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<EntityIdDto> createTvShow(@Valid @RequestBody TvShowCreateDto tvShowCreateDto) {
         try {
-            EntityIdDto tvShowId = this.tvShowService.add(tvShowAddDto);
+            EntityIdDto tvShowId = this.tvShowService.add(tvShowCreateDto);
             return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(tvShowId);
         } catch (NoSuchCastFound | NoSuchDirectorFound | NoSuchProducerFound | NoSuchWriterFound ex) {
             return ResponseEntity.notFound().build();

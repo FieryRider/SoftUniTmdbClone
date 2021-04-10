@@ -1,13 +1,21 @@
-package com.fieryrider.tmdbclone.models.dtos;
+package com.fieryrider.tmdbclone.models.dtos.create_dtos;
 
-import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
-import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fieryrider.tmdbclone.models.entities.enums.Genre;
+import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
+import com.fieryrider.tmdbclone.validation.EnumNameValid;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 
-public class TvShowAddDto {
+public class MovieCreateDto {
     @NotNull(message = "Title cannot be empty")
     @NotBlank(message = "Title cannot be empty")
     private String title;
@@ -26,6 +34,7 @@ public class TvShowAddDto {
     private String officialLanguage;
 
     @NotNull(message = "Genres cannot be null")
+    @EnumNameValid(enumClass = Genre.class, message = "Genre must be one of the predefined")
     private Set<String> genres;
 
     @NotNull(message = "Actors cannot be null")
@@ -40,15 +49,20 @@ public class TvShowAddDto {
     @NotNull(message = "Writers cannot be null")
     private Set<String> writers;
 
-    @NotNull(message = "Type cannot be null")
-    private TvShowType type;
+    @NotNull(message = "You must specify status")
+    @EnumNameValid(enumClass = MovieStatus.class, message = "Status must be one of the predefined")
+    private String status;
 
-    @NotNull(message = "Status cannot be null")
-    private TvShowStatus status;
+    @NotNull(message = "You must specify budget")
+    @PositiveOrZero(message = "Budget cannot be negative")
+    private BigDecimal budget;
 
-    @NotNull(message = "Network cannot be null")
-    @NotBlank(message = "Network cannot be empty")
-    private String network;
+    private BigDecimal revenue;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @NotNull(message = "You must specify release date")
+    private LocalDate releaseDate;
 
     public String getTitle() {
         return this.title;
@@ -130,30 +144,38 @@ public class TvShowAddDto {
         this.writers = writers;
     }
 
-    public TvShowType getType() {
-        return this.type;
-    }
-
-    public void setType(TvShowType type) {
-        this.type = type;
-    }
-
-    public TvShowStatus getStatus() {
+    public String getStatus() {
         return this.status;
     }
 
-    public void setStatus(TvShowStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getNetwork() {
-        return this.network;
+    public BigDecimal getBudget() {
+        return this.budget;
     }
 
-    public void setNetwork(String network) {
-        this.network = network;
+    public void setBudget(BigDecimal budget) {
+        this.budget = budget;
     }
 
-    public TvShowAddDto() {
+    public BigDecimal getRevenue() {
+        return this.revenue;
+    }
+
+    public void setRevenue(BigDecimal revenue) {
+        this.revenue = revenue;
+    }
+
+    public LocalDate getReleaseDate() {
+        return this.releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public MovieCreateDto() {
     }
 }

@@ -2,7 +2,7 @@ package com.fieryrider.tmdbclone.services;
 
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.PersonAddDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.entities.Person;
 
@@ -15,5 +15,5 @@ public interface PersonService {
 
     void deleteById(String id);
 
-    EntityIdDto add(PersonAddDto personAddDto);
+    EntityIdDto add(PersonCreateDto personCreateDto);
 }

@@ -3,7 +3,7 @@ package com.fieryrider.tmdbclone.web;
 import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.PersonAddDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,9 +41,9 @@ public class PeopleController {
     }
 
     @PostMapping
-    public ResponseEntity<EntityIdDto> createPerson(@Valid @RequestBody PersonAddDto personAddDto,
+    public ResponseEntity<EntityIdDto> createPerson(@Valid @RequestBody PersonCreateDto personCreateDto,
                                                UriComponentsBuilder uriComponentsBuilder) {
-        EntityIdDto personId = this.personService.add(personAddDto);
+        EntityIdDto personId = this.personService.add(personCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(personId);
     }
 

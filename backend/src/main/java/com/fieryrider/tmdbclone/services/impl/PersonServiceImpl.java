@@ -3,7 +3,7 @@ package com.fieryrider.tmdbclone.services.impl;
 import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.PersonAddDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.entities.BaseEntity;
 import com.fieryrider.tmdbclone.models.entities.Person;
@@ -52,8 +52,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public EntityIdDto add(PersonAddDto personAddDto) {
-        Person person = this.modelMapper.map(personAddDto, Person.class);
+    public EntityIdDto add(PersonCreateDto personCreateDto) {
+        Person person = this.modelMapper.map(personCreateDto, Person.class);
         Person saved = this.personRepository.saveAndFlush(person);
         return new EntityIdDto(saved.getId());
     }

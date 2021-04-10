@@ -3,7 +3,7 @@ package com.fieryrider.tmdbclone.services.impl;
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.TvShowAddDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.models.entities.Person;
 import com.fieryrider.tmdbclone.models.entities.TvShow;
@@ -57,34 +57,34 @@ public class TvShowServiceImpl implements TvShowService {
     }
 
     @Override
-    public EntityIdDto add(TvShowAddDto tvShowAddDto) {
-        TvShow tvShow = this.modelMapper.map(tvShowAddDto, TvShow.class);
+    public EntityIdDto add(TvShowCreateDto tvShowCreateDto) {
+        TvShow tvShow = this.modelMapper.map(tvShowCreateDto, TvShow.class);
         Set<Person> cast = new HashSet<>();
         Set<Person> producers = new HashSet<>();
         Set<Person> directors = new HashSet<>();
         Set<Person> writers = new HashSet<>();
-        for (String producerId : tvShowAddDto.getProducers()) {
+        for (String producerId : tvShowCreateDto.getProducers()) {
             try {
                 producers.add(this.personService.getPersonById(producerId));
             } catch (NoSuchElementException ex) {
                 throw new NoSuchProducerFound();
             }
         }
-        for (String directorId : tvShowAddDto.getDirectors()) {
+        for (String directorId : tvShowCreateDto.getDirectors()) {
             try {
                 directors.add(this.personService.getPersonById(directorId));
             } catch (NoSuchElementException ex) {
                 throw new NoSuchDirectorFound();
             }
         }
-        for (String writerId : tvShowAddDto.getWriters()) {
+        for (String writerId : tvShowCreateDto.getWriters()) {
             try {
                 writers.add(this.personService.getPersonById(writerId));
             } catch (NoSuchElementException ex) {
                 throw new NoSuchWriterFound();
             }
         }
-        for (String actorId : tvShowAddDto.getCast()) {
+        for (String actorId : tvShowCreateDto.getCast()) {
             try {
                 cast.add(this.personService.getPersonById(actorId));
             } catch (NoSuchElementException ex) {

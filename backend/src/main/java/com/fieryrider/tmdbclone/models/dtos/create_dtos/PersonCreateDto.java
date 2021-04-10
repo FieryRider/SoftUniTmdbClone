@@ -1,4 +1,4 @@
-package com.fieryrider.tmdbclone.models.dtos;
+package com.fieryrider.tmdbclone.models.dtos.create_dtos;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -6,13 +6,14 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fieryrider.tmdbclone.models.entities.enums.Gender;
 import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
+import com.fieryrider.tmdbclone.validation.EnumNameValid;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class PersonAddDto {
+public class PersonCreateDto {
     @NotNull(message = "Name cannot be null")
     @NotBlank(message = "Name cannot be empty")
     private String name;
@@ -34,10 +35,12 @@ public class PersonAddDto {
     private LocalDate birthDate;
 
     @NotNull(message = "Gender cannot be null")
-    private Gender gender;
+    @EnumNameValid(enumClass = Gender.class, message = "Gender must be one of the predefined")
+    private String gender;
 
     @NotNull(message = "Main Role cannot be null")
-    private PersonRole mainRole;
+    @EnumNameValid(enumClass = PersonRole.class, message = "Person role must be one of the predefined")
+    private String mainRole;
 
     public String getName() {
         return this.name;
@@ -87,22 +90,22 @@ public class PersonAddDto {
         this.birthDate = birthDate;
     }
 
-    public Gender getGender() {
+    public String getGender() {
         return this.gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public PersonRole getMainRole() {
+    public String getMainRole() {
         return this.mainRole;
     }
 
-    public void setMainRole(PersonRole mainRole) {
+    public void setMainRole(String mainRole) {
         this.mainRole = mainRole;
     }
 
-    public PersonAddDto() {
+    public PersonCreateDto() {
     }
 }
