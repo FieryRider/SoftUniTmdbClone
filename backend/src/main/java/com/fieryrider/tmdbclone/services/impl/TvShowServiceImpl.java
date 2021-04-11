@@ -1,12 +1,18 @@
 package com.fieryrider.tmdbclone.services.impl;
 
-import com.fieryrider.tmdbclone.exceptions.*;
+import com.fieryrider.tmdbclone.exceptions.NoSuchCastFound;
+import com.fieryrider.tmdbclone.exceptions.NoSuchProducerFound;
+import com.fieryrider.tmdbclone.exceptions.NoSuchTvShowException;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;
 import com.fieryrider.tmdbclone.models.entities.Person;
 import com.fieryrider.tmdbclone.models.entities.TvShow;
+import com.fieryrider.tmdbclone.models.entities.enums.Genre;
+import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
+import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
 import com.fieryrider.tmdbclone.repositories.TvShowRepository;
 import com.fieryrider.tmdbclone.services.PersonService;
 import com.fieryrider.tmdbclone.services.TvShowService;
@@ -79,5 +85,60 @@ public class TvShowServiceImpl implements TvShowService {
         tvShow.setCreators(creators);
         TvShow saved = this.tvShowRepository.saveAndFlush(tvShow);
         return new EntityIdDto(saved.getId());
+    }
+
+    @Override
+    public void edit(String id, TvShowUpdateDto tvShowUpdateDto) {
+        TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
+
+        if (tvShowUpdateDto.getTitle() != null)
+            tvShow.setTitle(tvShowUpdateDto.getTitle());
+        if (tvShowUpdateDto.getOverview() != null)
+            tvShow.setOverview(tvShowUpdateDto.getOverview());
+        if (tvShowUpdateDto.getRating() != null)
+            tvShow.setRating(tvShowUpdateDto.getRating());
+        if (tvShowUpdateDto.getPosterUrl() != null)
+            tvShow.setPosterUrl(tvShowUpdateDto.getPosterUrl());
+        if (tvShowUpdateDto.getOfficialLanguage() != null)
+            tvShow.setOfficialLanguage(tvShowUpdateDto.getOfficialLanguage());
+
+        if (tvShowUpdateDto.getGenres() != null) {
+            Set<Genre> genres = new HashSet<>();
+            for (String genre : tvShowUpdateDto.getGenres())
+                genres.add(Genre.valueOf(genre));
+            tvShow.setGenres(genres);
+        }
+
+        if (tvShowUpdateDto.getCast() != null) {
+            Set<Person> cast = new HashSet<>();
+            for (String actorId : tvShowUpdateDto.getCast()) {
+                try {
+                    cast.add(this.personService.getPersonById(actorId));
+                } catch (NoSuchElementException ex) {
+                    throw new NoSuchCastFound();
+                }
+            }
+            tvShow.setCast(cast);
+        }
+        if (tvShowUpdateDto.getCreators() != null) {
+            Set<Person> creators = new HashSet<>();
+            for (String creatorId : tvShowUpdateDto.getCreators()) {
+                try {
+                    creators.add(this.personService.getPersonById(creatorId));
+                } catch (NoSuchElementException ex) {
+                    throw new NoSuchProducerFound();
+                }
+            }
+            tvShow.setCreators(creators);
+        }
+
+        if (tvShowUpdateDto.getType() != null)
+            tvShow.setType(TvShowType.valueOf(tvShowUpdateDto.getType()));
+        if (tvShowUpdateDto.getStatus() != null)
+            tvShow.setStatus(TvShowStatus.valueOf(tvShowUpdateDto.getStatus()));
+        if (tvShowUpdateDto.getNetwork() != null)
+            tvShow.setNetwork(tvShowUpdateDto.getNetwork());
+
+        this.tvShowRepository.saveAndFlush(tvShow);
     }
 }

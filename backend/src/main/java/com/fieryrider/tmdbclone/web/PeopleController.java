@@ -3,8 +3,9 @@ package com.fieryrider.tmdbclone.web;
 import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/people")
@@ -45,6 +47,16 @@ public class PeopleController {
                                                UriComponentsBuilder uriComponentsBuilder) {
         EntityIdDto personId = this.personService.add(personCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(personId);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updatePerson(@PathVariable String id, @Valid @RequestBody PersonUpdateDto personUpdateDto) {
+        try {
+            this.personService.edit(id, personUpdateDto);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

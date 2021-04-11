@@ -3,8 +3,9 @@ package com.fieryrider.tmdbclone.web;
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;
 import com.fieryrider.tmdbclone.services.TvShowService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/tv-shows")
@@ -49,6 +51,17 @@ public class TvShowsController {
         }
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateTvShow(@PathVariable String id,
+                                             @Valid @RequestBody TvShowUpdateDto tvShowUpdateDto) {
+        try {
+            this.tvShowService.edit(id, tvShowUpdateDto);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTvShow(@PathVariable String id) {
         try {
@@ -58,4 +71,6 @@ public class TvShowsController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }

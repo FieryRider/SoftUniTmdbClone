@@ -5,6 +5,7 @@ import com.fieryrider.tmdbclone.models.dtos.BasicMovieDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.MovieDetailsDto;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.MovieUpdateDto;
 import com.fieryrider.tmdbclone.services.MovieService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/movies")
@@ -47,6 +49,16 @@ public class MoviesController {
             EntityIdDto movieId = this.movieService.add(movieCreateDto);
             return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(movieId);
         } catch (NoSuchCastFound | NoSuchDirectorFound | NoSuchProducerFound | NoSuchWriterFound ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateMovie(@PathVariable String id, @Valid @RequestBody MovieUpdateDto movieUpdateDto) {
+        try {
+            this.movieService.edit(id, movieUpdateDto);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
         }
     }

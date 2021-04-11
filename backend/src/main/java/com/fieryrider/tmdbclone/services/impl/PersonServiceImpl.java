@@ -3,10 +3,13 @@ package com.fieryrider.tmdbclone.services.impl;
 import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.models.entities.BaseEntity;
 import com.fieryrider.tmdbclone.models.entities.Person;
+import com.fieryrider.tmdbclone.models.entities.enums.Gender;
+import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
 import com.fieryrider.tmdbclone.repositories.PersonRepository;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.modelmapper.ModelMapper;
@@ -56,6 +59,29 @@ public class PersonServiceImpl implements PersonService {
         Person person = this.modelMapper.map(personCreateDto, Person.class);
         Person saved = this.personRepository.saveAndFlush(person);
         return new EntityIdDto(saved.getId());
+    }
+
+    @Override
+    public void edit(String id, PersonUpdateDto personUpdateDto) {
+        Person person = this.personRepository.findById(id).orElseThrow();
+        if (personUpdateDto.getName() != null)
+            person.setName(personUpdateDto.getName());
+        if (personUpdateDto.getAge() != null)
+            person.setAge(personUpdateDto.getAge());
+        if (personUpdateDto.getBiography() != null)
+            person.setBiography(personUpdateDto.getBiography());
+        if (personUpdateDto.getPlaceOfBirth() != null)
+            person.setPlaceOfBirth(personUpdateDto.getPlaceOfBirth());
+        if (personUpdateDto.getProfilePictureUrl() != null)
+            person.setProfilePictureUrl(personUpdateDto.getProfilePictureUrl());
+        if (personUpdateDto.getBirthDate() != null)
+            person.setBirthDate(personUpdateDto.getBirthDate());
+        if (personUpdateDto.getGender() != null)
+            person.setGender(Gender.valueOf(personUpdateDto.getGender()));
+        if (personUpdateDto.getMainRole() != null)
+            person.setMainRole(PersonRole.valueOf(personUpdateDto.getMainRole()));
+
+        this.personRepository.saveAndFlush(person);
     }
 
     @Override
