@@ -21,6 +21,12 @@ public class TvShow extends Show {
     @Column(nullable = false)
     private String network;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tv_shows_creators",
+            joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "creator_id", referencedColumnName = "id"))
+    private Set<Person> creators;
+
     public TvShowType getType() {
         return this.type;
     }
@@ -45,6 +51,14 @@ public class TvShow extends Show {
         this.status = status;
     }
 
+    public Set<Person> getCreators() {
+        return this.creators;
+    }
+
+    public void setCreators(Set<Person> creators) {
+        this.creators = creators;
+    }
+
     public TvShow() {
     }
 
@@ -55,10 +69,11 @@ public class TvShow extends Show {
         this.network = network;
     }
 
-    public TvShow(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers, TvShowType type, TvShowStatus status, String network) {
-        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast, producers, directors, writers);
+    public TvShow(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> creators, TvShowType type, TvShowStatus status, String network) {
+        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast);
         this.type = type;
         this.status = status;
         this.network = network;
+        this.creators = creators;
     }
 }

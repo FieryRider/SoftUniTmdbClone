@@ -34,11 +34,11 @@ public class Person extends BaseEntity {
     @ManyToMany(mappedBy = "cast", fetch = FetchType.EAGER)
     private Set<Show> acting;
     @ManyToMany(mappedBy = "producers", fetch = FetchType.EAGER)
-    private Set<Show> producing;
+    private Set<Movie> producing;
     @ManyToMany(mappedBy = "writers", fetch = FetchType.EAGER)
-    private Set<Show> writing;
+    private Set<Movie> writing;
     @ManyToMany(mappedBy = "directors", fetch = FetchType.EAGER)
-    private Set<Show> directing;
+    private Set<Movie> directing;
     @OneToMany(mappedBy = "from", fetch = FetchType.EAGER)
     private Set<Character> characters;
 
@@ -122,27 +122,27 @@ public class Person extends BaseEntity {
         this.acting = acting;
     }
 
-    public Set<Show> getProducing() {
+    public Set<Movie> getProducing() {
         return this.producing;
     }
 
-    public void setProducing(Set<Show> producing) {
+    public void setProducing(Set<Movie> producing) {
         this.producing = producing;
     }
 
-    public Set<Show> getWriting() {
+    public Set<Movie> getWriting() {
         return this.writing;
     }
 
-    public void setWriting(Set<Show> writing) {
+    public void setWriting(Set<Movie> writing) {
         this.writing = writing;
     }
 
-    public Set<Show> getDirecting() {
+    public Set<Movie> getDirecting() {
         return this.directing;
     }
 
-    public void setDirecting(Set<Show> directing) {
+    public void setDirecting(Set<Movie> directing) {
         this.directing = directing;
     }
 

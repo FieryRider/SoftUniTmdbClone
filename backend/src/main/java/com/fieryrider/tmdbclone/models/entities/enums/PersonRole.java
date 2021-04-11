@@ -4,7 +4,8 @@ public enum PersonRole {
     ACTING("Acting"),
     PRODUCTION("Production"),
     DIRECTING("Directing"),
-    WRITING("Writing");
+    WRITING("Writing"),
+    CREATOR("Creator");
 
     private final String displayName;
 

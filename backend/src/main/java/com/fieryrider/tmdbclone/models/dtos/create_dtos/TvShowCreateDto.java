@@ -34,14 +34,8 @@ public class TvShowCreateDto {
     @NotNull(message = "Actors cannot be null")
     private Set<String> cast;
 
-    @NotNull(message = "Producers cannot be null")
-    private Set<String> producers;
-
-    @NotNull(message = "Directors cannot be null")
-    private Set<String> directors;
-
-    @NotNull(message = "Writers cannot be null")
-    private Set<String> writers;
+    @NotNull(message = "Creators cannot be null")
+    private Set<String> creators;
 
     @NotNull(message = "Type cannot be null")
     @EnumNameValid(enumClass = TvShowType.class, message = "TvShowType must be one of the predefined")
@@ -111,28 +105,12 @@ public class TvShowCreateDto {
         this.cast = cast;
     }
 
-    public Set<String> getProducers() {
-        return this.producers;
+    public Set<String> getCreators() {
+        return this.creators;
     }
 
-    public void setProducers(Set<String> producers) {
-        this.producers = producers;
-    }
-
-    public Set<String> getDirectors() {
-        return this.directors;
-    }
-
-    public void setDirectors(Set<String> directors) {
-        this.directors = directors;
-    }
-
-    public Set<String> getWriters() {
-        return this.writers;
-    }
-
-    public void setWriters(Set<String> writers) {
-        this.writers = writers;
+    public void setCreators(Set<String> creators) {
+        this.creators = creators;
     }
 
     public String getType() {

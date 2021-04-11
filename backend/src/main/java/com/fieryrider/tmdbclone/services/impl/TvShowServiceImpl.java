@@ -60,28 +60,12 @@ public class TvShowServiceImpl implements TvShowService {
     public EntityIdDto add(TvShowCreateDto tvShowCreateDto) {
         TvShow tvShow = this.modelMapper.map(tvShowCreateDto, TvShow.class);
         Set<Person> cast = new HashSet<>();
-        Set<Person> producers = new HashSet<>();
-        Set<Person> directors = new HashSet<>();
-        Set<Person> writers = new HashSet<>();
-        for (String producerId : tvShowCreateDto.getProducers()) {
+        Set<Person> creators = new HashSet<>();
+        for (String creatorId : tvShowCreateDto.getCreators()) {
             try {
-                producers.add(this.personService.getPersonById(producerId));
+                creators.add(this.personService.getPersonById(creatorId));
             } catch (NoSuchElementException ex) {
                 throw new NoSuchProducerFound();
-            }
-        }
-        for (String directorId : tvShowCreateDto.getDirectors()) {
-            try {
-                directors.add(this.personService.getPersonById(directorId));
-            } catch (NoSuchElementException ex) {
-                throw new NoSuchDirectorFound();
-            }
-        }
-        for (String writerId : tvShowCreateDto.getWriters()) {
-            try {
-                writers.add(this.personService.getPersonById(writerId));
-            } catch (NoSuchElementException ex) {
-                throw new NoSuchWriterFound();
             }
         }
         for (String actorId : tvShowCreateDto.getCast()) {
@@ -92,9 +76,7 @@ public class TvShowServiceImpl implements TvShowService {
             }
         }
         tvShow.setCast(cast);
-        tvShow.setProducers(producers);
-        tvShow.setDirectors(directors);
-        tvShow.setWriters(writers);
+        tvShow.setCreators(creators);
         TvShow saved = this.tvShowRepository.saveAndFlush(tvShow);
         return new EntityIdDto(saved.getId());
     }

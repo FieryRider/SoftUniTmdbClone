@@ -37,23 +37,6 @@ public abstract class Show extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id"))
     private Set<Person> cast;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "shows_producers",
-            joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "producer_id", referencedColumnName = "id"))
-    private Set<Person> producers;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "shows_directors",
-            joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id"))
-    private Set<Person> directors;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "shows_writers",
-            joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "writer_id", referencedColumnName = "id"))
-    private Set<Person> writers;
 
     public String getTitle() {
         return this.title;
@@ -120,30 +103,6 @@ public abstract class Show extends BaseEntity {
         this.cast = cast;
     }
 
-    public Set<Person> getProducers() {
-        return this.producers;
-    }
-
-    public void setProducers(Set<Person> producers) {
-        this.producers = producers;
-    }
-
-    public Set<Person> getDirectors() {
-        return this.directors;
-    }
-
-    public void setDirectors(Set<Person> directors) {
-        this.directors = directors;
-    }
-
-    public Set<Person> getWriters() {
-        return this.writers;
-    }
-
-    public void setWriters(Set<Person> writers) {
-        this.writers = writers;
-    }
-
     public Show() {
     }
 
@@ -157,7 +116,7 @@ public abstract class Show extends BaseEntity {
         this.genres = genres;
     }
 
-    public Show(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers) {
+    public Show(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast) {
         this.title = title;
         this.overview = overview;
         this.rating = rating;
@@ -166,8 +125,5 @@ public abstract class Show extends BaseEntity {
         this.officialLanguage = officialLanguage;
         this.genres = genres;
         this.cast = cast;
-        this.producers = producers;
-        this.directors = directors;
-        this.writers = writers;
     }
 }

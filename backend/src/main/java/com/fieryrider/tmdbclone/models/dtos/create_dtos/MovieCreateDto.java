@@ -40,7 +40,6 @@ public class MovieCreateDto {
     @NotNull(message = "Actors cannot be null")
     private Set<String> cast;
 
-    @NotNull(message = "Producers cannot be null")
     private Set<String> producers;
 
     @NotNull(message = "Directors cannot be null")
