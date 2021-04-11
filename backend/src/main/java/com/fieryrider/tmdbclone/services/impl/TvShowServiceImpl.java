@@ -4,7 +4,7 @@ import com.fieryrider.tmdbclone.exceptions.NoSuchCastFound;
 import com.fieryrider.tmdbclone.exceptions.NoSuchProducerFound;
 import com.fieryrider.tmdbclone.exceptions.NoSuchTvShowException;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
-import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;

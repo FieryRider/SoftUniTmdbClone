@@ -3,7 +3,7 @@ package com.fieryrider.tmdbclone.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fieryrider.tmdbclone.models.dtos.GenreListDto;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.GenreListDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

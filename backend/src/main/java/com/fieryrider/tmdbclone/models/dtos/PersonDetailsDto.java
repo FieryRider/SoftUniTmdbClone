@@ -3,6 +3,8 @@ package com.fieryrider.tmdbclone.models.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonKnownForDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonShowDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Gender;
 import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
 

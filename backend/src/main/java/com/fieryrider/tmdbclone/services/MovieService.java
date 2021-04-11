@@ -1,7 +1,7 @@
 package com.fieryrider.tmdbclone.services;
 
 import com.fieryrider.tmdbclone.models.dtos.BasicMovieDto;
-import com.fieryrider.tmdbclone.models.dtos.EntityIdDto;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.dtos.MovieDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.MovieUpdateDto;

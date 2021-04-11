@@ -1,5 +1,7 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.MovieCastDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowCrewDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;

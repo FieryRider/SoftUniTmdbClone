@@ -3,6 +3,8 @@ package com.fieryrider.tmdbclone.models.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.MovieCastDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowCrewDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
 

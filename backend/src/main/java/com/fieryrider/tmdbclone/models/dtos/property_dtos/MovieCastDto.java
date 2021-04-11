@@ -1,4 +1,4 @@
-package com.fieryrider.tmdbclone.models.dtos;
+package com.fieryrider.tmdbclone.models.dtos.property_dtos;
 
 import java.util.Set;
 

@@ -1,4 +1,4 @@
-package com.fieryrider.tmdbclone.models.dtos;
+package com.fieryrider.tmdbclone.models.dtos.utility_dtos;
 
 public class GenreListDto {
     private String name;
