@@ -1,7 +1,10 @@
 package com.fieryrider.tmdbclone.global;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fieryrider.tmdbclone.models.dtos.exceptions.InputErrorDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -21,7 +24,7 @@ public class GlobalAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ MethodArgumentNotValidException.class })
     public @ResponseBody Map<String, List<InputErrorDto>> handleInvalidInput(
-            MethodArgumentNotValidException methodArgumentNotValidException) {
+            final MethodArgumentNotValidException methodArgumentNotValidException) {
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
         Map<String, List<InputErrorDto>> errors = new HashMap<>();
         for (ObjectError error : bindingResult.getAllErrors()) {
@@ -30,6 +33,22 @@ public class GlobalAdvice {
             //TODO Find how to get failed constraint type
             errors.putIfAbsent(fieldName, new ArrayList<>());
             errors.get(fieldName).add(new InputErrorDto(errorMessage,null));
+        }
+
+        return errors;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ HttpMessageNotReadableException.class })
+    public @ResponseBody Map<String, List<InputErrorDto>> handleInvalidInput(
+            final HttpMessageNotReadableException httpMessageNotReadableException) {
+        Map<String, List<InputErrorDto>> errors = new HashMap<>();
+        if (httpMessageNotReadableException.getCause() instanceof JsonMappingException) {
+            JsonMappingException jsonMappingException = (JsonMappingException) httpMessageNotReadableException.getCause();
+            String fieldName = jsonMappingException.getPath().get(0).getFieldName();
+            String value = (String) ((InvalidFormatException) httpMessageNotReadableException.getCause()).getValue();
+            errors.putIfAbsent(fieldName, new ArrayList<>());
+            errors.get(fieldName).add(new InputErrorDto(value, "invalidFormat"));
         }
         return errors;
     }

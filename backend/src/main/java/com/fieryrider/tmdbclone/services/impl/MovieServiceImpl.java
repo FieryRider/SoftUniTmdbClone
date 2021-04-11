@@ -64,11 +64,13 @@ public class MovieServiceImpl implements MovieService {
         Set<Person> producers = new HashSet<>();
         Set<Person> directors = new HashSet<>();
         Set<Person> writers = new HashSet<>();
-        for (String producerId : movieCreateDto.getProducers()) {
-            try {
-                producers.add(this.personService.getPersonById(producerId));
-            } catch (NoSuchElementException ex) {
-                throw new NoSuchProducerFound();
+        if (movieCreateDto.getProducers() != null) {
+            for (String producerId : movieCreateDto.getProducers()) {
+                try {
+                    producers.add(this.personService.getPersonById(producerId));
+                } catch (NoSuchElementException ex) {
+                    throw new NoSuchProducerFound();
+                }
             }
         }
         for (String directorId : movieCreateDto.getDirectors()) {
