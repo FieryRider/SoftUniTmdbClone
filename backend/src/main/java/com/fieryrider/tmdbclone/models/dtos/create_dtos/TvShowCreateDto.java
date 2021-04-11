@@ -65,11 +65,11 @@ public class TvShowCreateDto {
         this.overview = overview;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return this.rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
