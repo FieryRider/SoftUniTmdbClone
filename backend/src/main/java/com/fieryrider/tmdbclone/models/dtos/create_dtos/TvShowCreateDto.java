@@ -10,20 +10,20 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class TvShowCreateDto {
-    @NotNull(message = "Title cannot be empty")
+    @NotNull(message = "Title cannot be null")
     @NotBlank(message = "Title cannot be empty")
     private String title;
 
     private String overview;
 
-    @NotNull(message = "Rating cannot be empty")
-    private int rating;
+    @NotNull(message = "Rating cannot be null")
+    private Integer rating;
 
-    @NotNull(message = "PosterURL cannot be empty")
+    @NotNull(message = "PosterURL cannot be null")
     @NotBlank(message = "PosterURL cannot be empty")
     private String posterUrl;
 
-    @NotNull(message = "Official language cannot be empty")
+    @NotNull(message = "Official language cannot be null")
     @NotBlank(message = "Official language cannot be empty")
     private String officialLanguage;
 

@@ -20,7 +20,7 @@ public class PersonCreateDto {
 
     @NotNull(message = "Age cannot be null")
     @Min(value = 0, message = "Age must be a positive number")
-    private int age;
+    private Integer age;
 
     private String biography;
 

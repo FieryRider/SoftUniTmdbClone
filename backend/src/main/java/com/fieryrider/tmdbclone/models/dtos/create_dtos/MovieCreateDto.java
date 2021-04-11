@@ -16,20 +16,20 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public class MovieCreateDto {
-    @NotNull(message = "Title cannot be empty")
+    @NotNull(message = "Title cannot be null")
     @NotBlank(message = "Title cannot be empty")
     private String title;
 
     private String overview;
 
     @NotNull(message = "Rating cannot be empty")
-    private int rating;
+    private Integer rating;
 
-    @NotNull(message = "PosterURL cannot be empty")
+    @NotNull(message = "PosterURL cannot be null")
     @NotBlank(message = "PosterURL cannot be empty")
     private String posterUrl;
 
-    @NotNull(message = "Official language cannot be empty")
+    @NotNull(message = "Official language cannot be null")
     @NotBlank(message = "Official language cannot be empty")
     private String officialLanguage;
 
@@ -48,11 +48,11 @@ public class MovieCreateDto {
     @NotNull(message = "Writers cannot be null")
     private Set<String> writers;
 
-    @NotNull(message = "You must specify status")
+    @NotNull(message = "Status cannot be null")
     @EnumNameValid(enumClass = MovieStatus.class, message = "Status must be one of the predefined")
     private String status;
 
-    @NotNull(message = "You must specify budget")
+    @NotNull(message = "Budget cannot be null")
     @PositiveOrZero(message = "Budget cannot be negative")
     private BigDecimal budget;
 
