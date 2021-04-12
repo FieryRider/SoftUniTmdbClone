@@ -7,6 +7,7 @@ import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.models.entities.BaseEntity;
+import com.fieryrider.tmdbclone.models.entities.Character;
 import com.fieryrider.tmdbclone.models.entities.Person;
 import com.fieryrider.tmdbclone.models.entities.enums.Gender;
 import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
@@ -82,6 +83,12 @@ public class PersonServiceImpl implements PersonService {
             person.setMainRole(PersonRole.valueOf(personUpdateDto.getMainRole()));
 
         this.personRepository.saveAndFlush(person);
+    }
+
+    @Override
+    public void removeCharacterFromPerson(String personId, Character character) {
+        Person person = this.personRepository.findById(personId).orElseThrow();
+        person.getPlaying().remove(character);
     }
 
     @Override

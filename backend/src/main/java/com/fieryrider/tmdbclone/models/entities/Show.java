@@ -37,6 +37,11 @@ public abstract class Show extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id"))
     private Set<Person> cast;
 
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @JoinTable(name = "shows_characters",
+            joinColumns = @JoinColumn(name = "show_id"),
+            inverseJoinColumns = @JoinColumn(name = "character_id"))
+    private Set<Character> characters;
 
     public String getTitle() {
         return this.title;
@@ -101,6 +106,14 @@ public abstract class Show extends BaseEntity {
 
     public void setCast(Set<Person> cast) {
         this.cast = cast;
+    }
+
+    public Set<Character> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Set<Character> characters) {
+        this.characters = characters;
     }
 
     public Show() {
