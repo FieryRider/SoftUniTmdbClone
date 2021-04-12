@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface CharacterService {
     List<BasicCharacterDto> getAll();
-    Character getCharacter(String id);
+    Character getById(String id);
+
     EntityIdDto add(CharacterCreateDto characterCreateDto);
     void edit(String id, CharacterCreateDto characterCreateDto);
     void deleteById(String id);

@@ -21,9 +21,9 @@ import java.util.*;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-    private MovieRepository movieRepository;
-    private PersonService personService;
-    private ModelMapper modelMapper;
+    private final MovieRepository movieRepository;
+    private final PersonService personService;
+    private final ModelMapper modelMapper;
 
     public MovieServiceImpl(MovieRepository movieRepository, PersonService personService, ModelMapper modelMapper) {
         this.movieRepository = movieRepository;
@@ -54,26 +54,7 @@ public class MovieServiceImpl implements MovieService {
         }
 
         MovieDetailsDto movieDetailsDto = this.modelMapper.map(movie, MovieDetailsDto.class);
-
         return movieDetailsDto;
-    }
-
-    @Override
-    @Transactional
-    public void deleteById(String id) {
-        Movie movie = this.movieRepository.findById(id).orElseThrow();
-        for (Person producer : movie.getProducers())
-            producer.getProducing().remove(movie);
-        for (Person writer : movie.getWriters())
-            writer.getWriting().remove(movie);
-        for (Person director : movie.getDirectors())
-            director.getDirecting().remove(movie);
-        for (Person actor : movie.getCast())
-            actor.getActing().remove(movie);
-        for (Character character : movie.getCharacters())
-            character.getFrom().remove(movie);
-
-        this.movieRepository.deleteById(id);
     }
 
     @Override
@@ -196,5 +177,23 @@ public class MovieServiceImpl implements MovieService {
         }
 
         this.movieRepository.saveAndFlush(movie);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(String id) {
+        Movie movie = this.movieRepository.findById(id).orElseThrow();
+        for (Person producer : movie.getProducers())
+            producer.getProducing().remove(movie);
+        for (Person writer : movie.getWriters())
+            writer.getWriting().remove(movie);
+        for (Person director : movie.getDirectors())
+            director.getDirecting().remove(movie);
+        for (Person actor : movie.getCast())
+            actor.getActing().remove(movie);
+        for (Character character : movie.getCharacters())
+            character.getFrom().remove(movie);
+
+        this.movieRepository.deleteById(id);
     }
 }

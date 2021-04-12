@@ -32,6 +32,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Person getPersonById(String id) {
+        return this.personRepository.findById(id).orElseThrow();
+    }
+
+    @Override
     public List<BasicPersonDto> getAll() {
         List<Person> people = this.personRepository.findAll();
         List<BasicPersonDto> basicPersonDtos = new ArrayList<>();
@@ -46,27 +51,18 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person getPersonById(String id) {
-        return this.personRepository.findById(id).orElseThrow();
-    }
+    public PersonDetailsDto getById(String id) {
+        Person person;
+        try {
+            person = this.personRepository.findById(id).orElseThrow();
+        } catch (NoSuchElementException ex) {
+            throw new NoSuchPersonException();
+        }
 
-    @Override
-    @Transactional
-    public void deleteById(String id) {
-        Person person = this.personRepository.findById(id).orElseThrow();
+        PersonDetailsDto personDetailsDto = this.modelMapper.map(person, PersonDetailsDto.class);
+        personDetailsDto.setKnownCredits(person.getActing().size() + person.getDirecting().size() + person.getProducing().size() + person.getWriting().size());
 
-        for (Show show : person.getActing())
-            show.getCast().remove(person);
-        for (Movie movie : person.getWriting())
-            movie.getWriters().remove(person);
-        for (Movie movie : person.getProducing())
-            movie.getProducers().remove(person);
-        for (Movie movie : person.getDirecting())
-            movie.getDirectors().remove(person);
-        for (TvShow tvShow : person.getCreating())
-            tvShow.getCreators().remove(person);
-
-        this.personRepository.delete(person);
+        return personDetailsDto;
     }
 
     @Override
@@ -101,24 +97,27 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
+    public void deleteById(String id) {
+        Person person = this.personRepository.findById(id).orElseThrow();
+
+        for (Show show : person.getActing())
+            show.getCast().remove(person);
+        for (Movie movie : person.getWriting())
+            movie.getWriters().remove(person);
+        for (Movie movie : person.getProducing())
+            movie.getProducers().remove(person);
+        for (Movie movie : person.getDirecting())
+            movie.getDirectors().remove(person);
+        for (TvShow tvShow : person.getCreating())
+            tvShow.getCreators().remove(person);
+
+        this.personRepository.delete(person);
+    }
+
+    @Override
+    @Transactional
     public void removeCharacterFromPerson(String personId, Character character) {
         Person person = this.personRepository.findById(personId).orElseThrow();
         person.getPlaying().remove(character);
     }
-
-    @Override
-    public PersonDetailsDto getById(String id) {
-        Person person;
-        try {
-            person = this.personRepository.findById(id).orElseThrow();
-        } catch (NoSuchElementException ex) {
-            throw new NoSuchPersonException();
-        }
-
-        PersonDetailsDto personDetailsDto = this.modelMapper.map(person, PersonDetailsDto.class);
-        personDetailsDto.setKnownCredits(person.getActing().size() + person.getDirecting().size() + person.getProducing().size() + person.getWriting().size());
-
-        return personDetailsDto;
-    }
-
 }

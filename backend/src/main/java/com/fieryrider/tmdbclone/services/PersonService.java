@@ -11,14 +11,14 @@ import com.fieryrider.tmdbclone.models.entities.Person;
 import java.util.List;
 
 public interface PersonService {
-    List<BasicPersonDto> getAll();
-    PersonDetailsDto getById(String id);
     Person getPersonById(String id);
 
-    void deleteById(String id);
+    List<BasicPersonDto> getAll();
+    PersonDetailsDto getById(String id);
 
     EntityIdDto add(PersonCreateDto personCreateDto);
     void edit(String id, PersonUpdateDto personUpdateDto);
+    void deleteById(String id);
 
     void removeCharacterFromPerson(String personId, Character character);
 }

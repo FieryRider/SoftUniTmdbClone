@@ -44,7 +44,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public Character getCharacter(String id) {
+    public Character getById(String id) {
         return this.characterRepository.findById(id).orElseThrow();
     }
 
@@ -64,7 +64,7 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public void deleteById(String id) {
-        Character character = getCharacter(id);
+        Character character = getById(id);
         for (Person person : character.getPlayedBy())
             this.personService.removeCharacterFromPerson(person.getId(), character);
         for (Show show : character.getFrom())

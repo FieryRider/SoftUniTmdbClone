@@ -21,7 +21,7 @@ public class Movie extends Show {
     private LocalDate releaseDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "movie_producers",
+    @JoinTable(name = "movies_producers",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "producer_id", referencedColumnName = "id"))
     private Set<Person> producers;

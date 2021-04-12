@@ -10,11 +10,9 @@ import java.util.List;
 
 public interface TvShowService {
     List<BasicTvShowDto> getAll();
-
     TvShowDetailsDto getById(String id);
-
-    void deleteById(String id);
 
     EntityIdDto add(TvShowCreateDto tvShowCreateDto);
     void edit(String id, TvShowUpdateDto tvShowUpdateDto);
+    void deleteById(String id);
 }

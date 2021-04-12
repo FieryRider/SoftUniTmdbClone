@@ -10,11 +10,9 @@ import java.util.List;
 
 public interface MovieService {
     List<BasicMovieDto> getAll();
-
     MovieDetailsDto getById(String id);
-
-    void deleteById(String id);
 
     EntityIdDto add(MovieCreateDto movieCreateDto);
     void edit(String id, MovieUpdateDto movieUpdateDto);
+    void deleteById(String id);
 }

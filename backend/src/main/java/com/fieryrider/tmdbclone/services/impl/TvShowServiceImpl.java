@@ -60,19 +60,6 @@ public class TvShowServiceImpl implements TvShowService {
     }
 
     @Override
-    @Transactional
-    public void deleteById(String id) {
-        TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
-        for (Person creator : tvShow.getCreators())
-            creator.getCreating().remove(tvShow);
-        for (Person actor : tvShow.getCast())
-            actor.getActing().remove(tvShow);
-        for (Character character : tvShow.getCharacters())
-            character.getFrom().remove(tvShow);
-        this.tvShowRepository.deleteById(id);
-    }
-
-    @Override
     public EntityIdDto add(TvShowCreateDto tvShowCreateDto) {
         TvShow tvShow = this.modelMapper.map(tvShowCreateDto, TvShow.class);
         Set<Person> cast = new HashSet<>();
@@ -150,5 +137,18 @@ public class TvShowServiceImpl implements TvShowService {
             tvShow.setNetwork(tvShowUpdateDto.getNetwork());
 
         this.tvShowRepository.saveAndFlush(tvShow);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(String id) {
+        TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
+        for (Person creator : tvShow.getCreators())
+            creator.getCreating().remove(tvShow);
+        for (Person actor : tvShow.getCast())
+            actor.getActing().remove(tvShow);
+        for (Character character : tvShow.getCharacters())
+            character.getFrom().remove(tvShow);
+        this.tvShowRepository.deleteById(id);
     }
 }
