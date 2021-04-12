@@ -85,6 +85,7 @@ public class TvShowServiceImpl implements TvShowService {
     }
 
     @Override
+    @Transactional
     public void edit(String id, TvShowUpdateDto tvShowUpdateDto) {
         TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
 
@@ -107,26 +108,44 @@ public class TvShowServiceImpl implements TvShowService {
         }
 
         if (tvShowUpdateDto.getCast() != null) {
-            Set<Person> cast = new HashSet<>();
+            Set<Person> newCast = new HashSet<>();
             for (String actorId : tvShowUpdateDto.getCast()) {
                 try {
-                    cast.add(this.personService.getPersonById(actorId));
+                    newCast.add(this.personService.getPersonById(actorId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchCastFound();
                 }
             }
-            tvShow.setCast(cast);
+
+            Set<Person> currentCast = tvShow.getCast();
+            for (Person actor : currentCast) {
+                if (!newCast.contains(actor))
+                    actor.getActing().remove(tvShow);
+            }
+            currentCast.removeIf(actor -> !newCast.contains(actor));
+            currentCast.addAll(newCast);
+            for (Person actor : currentCast)
+                actor.getActing().add(tvShow);
         }
         if (tvShowUpdateDto.getCreators() != null) {
-            Set<Person> creators = new HashSet<>();
+            Set<Person> newCreators = new HashSet<>();
             for (String creatorId : tvShowUpdateDto.getCreators()) {
                 try {
-                    creators.add(this.personService.getPersonById(creatorId));
+                    newCreators.add(this.personService.getPersonById(creatorId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchProducerFound();
                 }
             }
-            tvShow.setCreators(creators);
+
+            Set<Person> currentCreators = tvShow.getCreators();
+            for (Person creator : currentCreators) {
+                if (!newCreators.contains(creator))
+                    creator.getCreating().remove(tvShow);
+            }
+            currentCreators.removeIf(creator -> !newCreators.contains(creator));
+            currentCreators.addAll(newCreators);
+            for (Person creator : currentCreators)
+                creator.getCreating().add(tvShow);
         }
 
         if (tvShowUpdateDto.getType() != null)

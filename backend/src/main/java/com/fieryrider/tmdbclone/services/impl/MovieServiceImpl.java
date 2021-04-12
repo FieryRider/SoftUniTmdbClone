@@ -103,6 +103,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public void edit(String id, MovieUpdateDto movieUpdateDto) {
         Movie movie = this.movieRepository.findById(id).orElseThrow();
 
@@ -132,48 +133,80 @@ public class MovieServiceImpl implements MovieService {
             movie.setReleaseDate(movieUpdateDto.getReleaseDate());
 
         if (movieUpdateDto.getProducers() != null) {
-            Set<Person> producers = new HashSet<>();
+            Set<Person> newProducers = new HashSet<>();
             for (String producerId : movieUpdateDto.getProducers()) {
                 try {
-                    producers.add(this.personService.getPersonById(producerId));
+                    newProducers.add(this.personService.getPersonById(producerId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchProducerFound();
                 }
             }
-            movie.setProducers(producers);
+            Set<Person> currentProducers = movie.getProducers();
+            for (Person producer : currentProducers) {
+                if (!newProducers.contains(producer))
+                    producer.getProducing().remove(movie);
+            }
+            currentProducers.removeIf(producer -> !newProducers.contains(producer));
+            currentProducers.addAll(newProducers);
+            for (Person producer : currentProducers)
+                producer.getProducing().add(movie);
         }
         if (movieUpdateDto.getDirectors() != null) {
-            Set<Person> directors = new HashSet<>();
+            Set<Person> newDirectors = new HashSet<>();
             for (String directorId : movieUpdateDto.getDirectors()) {
                 try {
-                    directors.add(this.personService.getPersonById(directorId));
+                    newDirectors.add(this.personService.getPersonById(directorId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchDirectorFound();
                 }
             }
-            movie.setDirectors(directors);
+            Set<Person> currentDirectors = movie.getDirectors();
+            for (Person director : currentDirectors) {
+                if (!newDirectors.contains(director))
+                    director.getDirecting().remove(movie);
+            }
+            currentDirectors.removeIf(director -> !newDirectors.contains(director));
+            currentDirectors.addAll(newDirectors);
+            for (Person director : currentDirectors)
+                director.getDirecting().add(movie);
         }
         if (movieUpdateDto.getWriters() != null) {
-            Set<Person> writers = new HashSet<>();
+            Set<Person> newWriters = new HashSet<>();
             for (String writerId : movieUpdateDto.getWriters()) {
                 try {
-                    writers.add(this.personService.getPersonById(writerId));
+                    newWriters.add(this.personService.getPersonById(writerId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchWriterFound();
                 }
             }
-            movie.setWriters(writers);
+            Set<Person> currentWriters = movie.getWriters();
+            for (Person writer : currentWriters) {
+                if (!newWriters.contains(writer))
+                    writer.getWriting().remove(movie);
+            }
+            currentWriters.removeIf(writer -> !newWriters.contains(writer));
+            currentWriters.addAll(newWriters);
+            for (Person writer : currentWriters)
+                writer.getWriting().add(movie);
         }
         if (movieUpdateDto.getCast() != null) {
-            Set<Person> cast = new HashSet<>();
+            Set<Person> newCast = new HashSet<>();
             for (String actorId : movieUpdateDto.getCast()) {
                 try {
-                    cast.add(this.personService.getPersonById(actorId));
+                    newCast.add(this.personService.getPersonById(actorId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchCastFound();
                 }
             }
-            movie.setCast(cast);
+            Set<Person> currentCast = movie.getCast();
+            for (Person actor : currentCast) {
+                if (!newCast.contains(actor))
+                    actor.getActing().remove(movie);
+            }
+            currentCast.removeIf(actor -> !newCast.contains(actor));
+            currentCast.addAll(newCast);
+            for (Person actor : currentCast)
+                actor.getActing().add(movie);
         }
 
         this.movieRepository.saveAndFlush(movie);
