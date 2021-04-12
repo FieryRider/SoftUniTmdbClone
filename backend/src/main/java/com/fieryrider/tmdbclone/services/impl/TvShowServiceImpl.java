@@ -66,14 +66,18 @@ public class TvShowServiceImpl implements TvShowService {
         Set<Person> creators = new HashSet<>();
         for (String creatorId : tvShowCreateDto.getCreators()) {
             try {
-                creators.add(this.personService.getPersonById(creatorId));
+                Person creator = this.personService.getPersonById(creatorId);
+                creators.add(creator);
+                creator.getCreating().add(tvShow);
             } catch (NoSuchElementException ex) {
                 throw new NoSuchProducerFound();
             }
         }
         for (String actorId : tvShowCreateDto.getCast()) {
             try {
-                cast.add(this.personService.getPersonById(actorId));
+                Person actor = this.personService.getPersonById(actorId);
+                cast.add(actor);
+                actor.getActing().add(tvShow);
             } catch (NoSuchElementException ex) {
                 throw new NoSuchCastFound();
             }

@@ -21,7 +21,7 @@ public class TvShow extends Show {
     @Column(nullable = false)
     private String network;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "tv_shows_creators",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "creator_id", referencedColumnName = "id"))

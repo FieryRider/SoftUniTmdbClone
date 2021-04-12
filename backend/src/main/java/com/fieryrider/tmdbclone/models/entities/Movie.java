@@ -20,19 +20,19 @@ public class Movie extends Show {
     @Column(name = "release_date", nullable = false)
     private LocalDate releaseDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "movies_producers",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "producer_id", referencedColumnName = "id"))
     private Set<Person> producers;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "movies_directors",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id"))
     private Set<Person> directors;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "movies_writers",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "writer_id", referencedColumnName = "id"))
