@@ -31,11 +31,7 @@ public class TvShowDetailsDto {
 
     private Set<MovieCastDto> cast;
 
-    private Set<ShowCrewDto> producers;
-
-    private Set<ShowCrewDto> directors;
-
-    private Set<ShowCrewDto> writers;
+    private Set<ShowCrewDto> creators;
 
     public String getId() {
         return this.id;
@@ -125,28 +121,12 @@ public class TvShowDetailsDto {
         this.cast = cast;
     }
 
-    public Set<ShowCrewDto> getProducers() {
-        return this.producers;
+    public Set<ShowCrewDto> getCreators() {
+        return this.creators;
     }
 
-    public void setProducers(Set<ShowCrewDto> producers) {
-        this.producers = producers;
-    }
-
-    public Set<ShowCrewDto> getDirectors() {
-        return this.directors;
-    }
-
-    public void setDirectors(Set<ShowCrewDto> directors) {
-        this.directors = directors;
-    }
-
-    public Set<ShowCrewDto> getWriters() {
-        return this.writers;
-    }
-
-    public void setWriters(Set<ShowCrewDto> writers) {
-        this.writers = writers;
+    public void setCreators(Set<ShowCrewDto> creators) {
+        this.creators = creators;
     }
 
     public TvShowDetailsDto() {
