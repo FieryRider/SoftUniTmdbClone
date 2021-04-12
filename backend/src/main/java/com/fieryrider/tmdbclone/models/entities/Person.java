@@ -39,6 +39,8 @@ public class Person extends BaseEntity {
     private Set<Movie> writing;
     @ManyToMany(mappedBy = "directors", fetch = FetchType.EAGER)
     private Set<Movie> directing;
+    @ManyToMany(mappedBy = "creators", fetch = FetchType.EAGER)
+    private Set<TvShow> creating;
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinTable(name = "people_characters",
             joinColumns = @JoinColumn(name = "person_id"),
@@ -147,6 +149,14 @@ public class Person extends BaseEntity {
 
     public void setDirecting(Set<Movie> directing) {
         this.directing = directing;
+    }
+
+    public Set<TvShow> getCreating() {
+        return this.creating;
+    }
+
+    public void setCreating(Set<TvShow> creating) {
+        this.creating = creating;
     }
 
     public Set<Character> getPlaying() {

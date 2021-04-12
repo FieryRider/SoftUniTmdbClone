@@ -2,19 +2,19 @@ package com.fieryrider.tmdbclone.services.impl;
 
 import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
-import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
-import com.fieryrider.tmdbclone.models.entities.BaseEntity;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
+import com.fieryrider.tmdbclone.models.entities.*;
 import com.fieryrider.tmdbclone.models.entities.Character;
-import com.fieryrider.tmdbclone.models.entities.Person;
 import com.fieryrider.tmdbclone.models.entities.enums.Gender;
 import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
 import com.fieryrider.tmdbclone.repositories.PersonRepository;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +51,22 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional
     public void deleteById(String id) {
-        this.personRepository.deleteById(id);
+        Person person = this.personRepository.findById(id).orElseThrow();
+
+        for (Show show : person.getActing())
+            show.getCast().remove(person);
+        for (Movie movie : person.getWriting())
+            movie.getWriters().remove(person);
+        for (Movie movie : person.getProducing())
+            movie.getProducers().remove(person);
+        for (Movie movie : person.getDirecting())
+            movie.getDirectors().remove(person);
+        for (TvShow tvShow : person.getCreating())
+            tvShow.getCreators().remove(person);
+
+        this.personRepository.delete(person);
     }
 
     @Override
@@ -86,6 +100,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional
     public void removeCharacterFromPerson(String personId, Character character) {
         Person person = this.personRepository.findById(personId).orElseThrow();
         person.getPlaying().remove(character);

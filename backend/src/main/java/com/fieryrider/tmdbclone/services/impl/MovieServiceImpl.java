@@ -5,6 +5,7 @@ import com.fieryrider.tmdbclone.models.dtos.*;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.MovieUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
+import com.fieryrider.tmdbclone.models.entities.Character;
 import com.fieryrider.tmdbclone.models.entities.Movie;
 import com.fieryrider.tmdbclone.models.entities.Person;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
@@ -14,6 +15,7 @@ import com.fieryrider.tmdbclone.services.MovieService;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -57,7 +59,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public void deleteById(String id) {
+        Movie movie = this.movieRepository.findById(id).orElseThrow();
+        for (Person producer : movie.getProducers())
+            producer.getProducing().remove(movie);
+        for (Person writer : movie.getWriters())
+            writer.getWriting().remove(movie);
+        for (Person director : movie.getDirectors())
+            director.getDirecting().remove(movie);
+        for (Person actor : movie.getCast())
+            actor.getActing().remove(movie);
+        for (Character character : movie.getCharacters())
+            character.getFrom().remove(movie);
+
         this.movieRepository.deleteById(id);
     }
 
