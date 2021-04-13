@@ -2,6 +2,7 @@ package com.fieryrider.tmdbclone.web;
 
 import com.fieryrider.tmdbclone.models.dtos.BasicCharacterDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.CharacterCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.CharacterDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.services.CharacterService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,11 +24,15 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<BasicCharacterDto> getAll() {
         return this.characterService.getAll();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CharacterDetailsDto> get(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.characterService.getById(id));
+    }
     @PostMapping
     public ResponseEntity<EntityIdDto> createCharacter(@Valid @RequestBody CharacterCreateDto characterCreateDto) {
         EntityIdDto characterId = this.characterService.add(characterCreateDto);

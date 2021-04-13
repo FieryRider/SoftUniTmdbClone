@@ -1,9 +1,6 @@
 package com.fieryrider.tmdbclone.models.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -12,10 +9,10 @@ public class Character extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "characters")
+    @ManyToMany(mappedBy = "characters", fetch = FetchType.EAGER)
     private Set<Show> from;
 
-    @ManyToMany(mappedBy = "playing")
+    @ManyToMany(mappedBy = "playing", fetch = FetchType.EAGER)
     private Set<Person> playedBy;
 
     public String getName() {

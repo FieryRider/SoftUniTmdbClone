@@ -5,6 +5,7 @@ import com.fieryrider.tmdbclone.models.entities.Show;
 import com.fieryrider.tmdbclone.repositories.ShowRepository;
 import com.fieryrider.tmdbclone.services.ShowService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ShowServiceImpl implements ShowService {
@@ -20,6 +21,7 @@ public class ShowServiceImpl implements ShowService {
     }
 
     @Override
+    @Transactional
     public void removeCharacterFromShow(String showId, Character character) {
         Show show = this.showRepository.findById(showId).orElseThrow();
         show.getCharacters().remove(character);

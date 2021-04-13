@@ -62,6 +62,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public EntityIdDto add(MovieCreateDto movieCreateDto) {
         Movie movie = this.modelMapper.map(movieCreateDto, Movie.class);
         Set<Person> cast = new HashSet<>();
@@ -224,7 +225,7 @@ public class MovieServiceImpl implements MovieService {
             Set<Character> newCharacters = new HashSet<>();
             for (String characterId : movieUpdateDto.getCharacters()) {
                 try {
-                    newCharacters.add(this.characterService.getById(characterId));
+                    newCharacters.add(this.characterService.getCharacterById(characterId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchCharacterFound();
                 }

@@ -64,6 +64,7 @@ public class TvShowServiceImpl implements TvShowService {
     }
 
     @Override
+    @Transactional
     public EntityIdDto add(TvShowCreateDto tvShowCreateDto) {
         TvShow tvShow = this.modelMapper.map(tvShowCreateDto, TvShow.class);
         Set<Person> cast = new HashSet<>();
@@ -159,7 +160,7 @@ public class TvShowServiceImpl implements TvShowService {
             Set<Character> newCharacters = new HashSet<>();
             for (String characterId : tvShowUpdateDto.getCharacters()) {
                 try {
-                    newCharacters.add(this.characterService.getById(characterId));
+                    newCharacters.add(this.characterService.getCharacterById(characterId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchCharacterFound();
                 }

@@ -6,7 +6,7 @@ public class PersonShowDto {
     private String id;
     private String title;
     private int year;
-    private Set<String> characters;
+    private Set<CharacterPropertyDto> characters;
 
     public String getId() {
         return this.id;
@@ -32,11 +32,11 @@ public class PersonShowDto {
         this.year = year;
     }
 
-    public Set<String> getCharacters() {
+    public Set<CharacterPropertyDto> getCharacters() {
         return this.characters;
     }
 
-    public void setCharacters(Set<String> characters) {
+    public void setCharacters(Set<CharacterPropertyDto> characters) {
         this.characters = characters;
     }
 

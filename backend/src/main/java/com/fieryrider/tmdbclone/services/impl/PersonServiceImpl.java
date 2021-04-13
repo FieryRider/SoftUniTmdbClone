@@ -15,6 +15,7 @@ import com.fieryrider.tmdbclone.repositories.PersonRepository;
 import com.fieryrider.tmdbclone.services.CharacterService;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +25,17 @@ import java.util.stream.Collectors;
 @Service
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
-    private final CharacterService characterService;
+    private CharacterService characterService;
     private final ModelMapper modelMapper;
 
-    public PersonServiceImpl(PersonRepository personRepository, CharacterService characterService, ModelMapper modelMapper) {
+    public PersonServiceImpl(PersonRepository personRepository, ModelMapper modelMapper) {
         this.personRepository = personRepository;
-        this.characterService = characterService;
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setCharacterService(CharacterService characterService) {
+        this.characterService = characterService;
     }
 
     @Override
@@ -75,6 +80,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional
     public void edit(String id, PersonUpdateDto personUpdateDto) {
         Person person = this.personRepository.findById(id).orElseThrow();
         if (personUpdateDto.getName() != null)
@@ -97,7 +103,7 @@ public class PersonServiceImpl implements PersonService {
             Set<Character> newPlaying = new HashSet<>();
             for (String characterId : personUpdateDto.getPlaying()) {
                 try {
-                    newPlaying.add(this.characterService.getById(characterId));
+                    newPlaying.add(this.characterService.getCharacterById(characterId));
                 } catch (NoSuchElementException ex) {
                     throw new NoSuchCharacterFound();
                 }
