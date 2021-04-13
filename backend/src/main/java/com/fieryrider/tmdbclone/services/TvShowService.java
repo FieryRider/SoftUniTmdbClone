@@ -11,6 +11,8 @@ import java.util.List;
 public interface TvShowService {
     List<BasicTvShowDto> getAll();
     TvShowDetailsDto getById(String id);
+    List<BasicTvShowDto> getPopular();
+    void setPopular(String id, boolean popular);
 
     EntityIdDto add(TvShowCreateDto tvShowCreateDto);
     void edit(String id, TvShowUpdateDto tvShowUpdateDto);

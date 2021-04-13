@@ -43,6 +43,8 @@ public abstract class Show extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "character_id"))
     private Set<Character> characters;
 
+    private boolean popular;
+
     public String getTitle() {
         return this.title;
     }
@@ -116,6 +118,14 @@ public abstract class Show extends BaseEntity {
         this.characters = characters;
     }
 
+    public boolean isPopular() {
+        return this.popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
+    }
+
     public Show() {
     }
 
@@ -127,6 +137,7 @@ public abstract class Show extends BaseEntity {
         this.posterUrl = posterUrl;
         this.officialLanguage = officialLanguage;
         this.genres = genres;
+        this.popular = false;
     }
 
     public Show(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast) {
@@ -138,5 +149,6 @@ public abstract class Show extends BaseEntity {
         this.officialLanguage = officialLanguage;
         this.genres = genres;
         this.cast = cast;
+        this.popular = false;
     }
 }

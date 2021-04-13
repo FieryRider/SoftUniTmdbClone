@@ -64,6 +64,25 @@ public class TvShowServiceImpl implements TvShowService {
     }
 
     @Override
+    public List<BasicTvShowDto> getPopular() {
+        List<TvShow> tvShows = this.tvShowRepository.getAllByPopularEquals(true);
+        List<BasicTvShowDto> basicTvShowDtos = new ArrayList<>();
+        for (TvShow tvShow : tvShows) {
+            BasicTvShowDto basicTvShowDto = this.modelMapper.map(tvShow, BasicTvShowDto.class);
+            basicTvShowDtos.add(basicTvShowDto);
+        }
+
+        return basicTvShowDtos;
+    }
+
+    @Override
+    public void setPopular(String id, boolean popular) {
+        TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
+        tvShow.setPopular(popular);
+        this.tvShowRepository.saveAndFlush(tvShow);
+    }
+
+    @Override
     @Transactional
     public EntityIdDto add(TvShowCreateDto tvShowCreateDto) {
         TvShow tvShow = this.modelMapper.map(tvShowCreateDto, TvShow.class);

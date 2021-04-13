@@ -29,6 +29,7 @@ public class MovieServiceImpl implements MovieService {
     private final ModelMapper modelMapper;
 
     public MovieServiceImpl(MovieRepository movieRepository, PersonService personService, CharacterService characterService, ModelMapper modelMapper) {
+        super();
         this.movieRepository = movieRepository;
         this.personService = personService;
         this.characterService = characterService;
@@ -59,6 +60,25 @@ public class MovieServiceImpl implements MovieService {
 
         MovieDetailsDto movieDetailsDto = this.modelMapper.map(movie, MovieDetailsDto.class);
         return movieDetailsDto;
+    }
+
+    @Override
+    public List<BasicMovieDto> getPopular() {
+        List<Movie> movies =  this.movieRepository.getAllByPopularEquals(true);
+        List<BasicMovieDto> basicMovieDtos = new ArrayList<>();
+        for (Movie movie : movies) {
+            BasicMovieDto basicMovieDto = this.modelMapper.map(movie, BasicMovieDto.class);
+            basicMovieDtos.add(basicMovieDto);
+        }
+
+        return basicMovieDtos;
+    }
+
+    @Override
+    public void setPopular(String id, boolean popular) {
+        Movie movie = this.movieRepository.findById(id).orElseThrow();
+        movie.setPopular(popular);
+        this.movieRepository.saveAndFlush(movie);
     }
 
     @Override

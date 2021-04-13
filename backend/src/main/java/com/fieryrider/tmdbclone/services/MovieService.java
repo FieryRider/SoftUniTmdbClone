@@ -11,6 +11,8 @@ import java.util.List;
 public interface MovieService {
     List<BasicMovieDto> getAll();
     MovieDetailsDto getById(String id);
+    List<BasicMovieDto> getPopular();
+    void setPopular(String id, boolean popular);
 
     EntityIdDto add(MovieCreateDto movieCreateDto);
     void edit(String id, MovieUpdateDto movieUpdateDto);

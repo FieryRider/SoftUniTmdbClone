@@ -32,6 +32,11 @@ public class PeopleController {
         return this.personService.getAll();
     }
 
+    @GetMapping("/popular")
+    public List<BasicPersonDto> getPopular() {
+        return this.personService.getPopular();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PersonDetailsDto> getPerson(@PathVariable String id) {
         try {
@@ -49,6 +54,16 @@ public class PeopleController {
         return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(personId);
     }
 
+    @PostMapping("/popular/{id}")
+    public ResponseEntity<Void> setPopular(@PathVariable String id) {
+        try {
+            this.personService.setPopular(id, true);
+            return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePerson(@PathVariable String id, @Valid @RequestBody PersonUpdateDto personUpdateDto) {
         try {
@@ -64,6 +79,16 @@ public class PeopleController {
         try {
             this.personService.deleteById(id);
             return ResponseEntity.noContent().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/popular/{id}")
+    public ResponseEntity<Void> unsetPopular(@PathVariable String id) {
+        try {
+            this.personService.setPopular(id, false);
+            return ResponseEntity.ok().build();
         } catch (EmptyResultDataAccessException ex) {
             return ResponseEntity.notFound().build();
         }

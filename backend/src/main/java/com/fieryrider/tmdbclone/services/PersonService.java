@@ -15,6 +15,8 @@ public interface PersonService {
 
     List<BasicPersonDto> getAll();
     PersonDetailsDto getById(String id);
+    List<BasicPersonDto> getPopular();
+    void setPopular(String id, boolean popular);
 
     EntityIdDto add(PersonCreateDto personCreateDto);
     void edit(String id, PersonUpdateDto personUpdateDto);

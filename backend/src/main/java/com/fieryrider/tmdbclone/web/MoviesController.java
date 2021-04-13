@@ -32,6 +32,11 @@ public class MoviesController {
         return this.movieService.getAll();
     }
 
+    @GetMapping("/popular")
+    public List<BasicMovieDto> getPopular() {
+        return this.movieService.getPopular();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<MovieDetailsDto> getMovie(@PathVariable String id) {
         try {
@@ -53,6 +58,16 @@ public class MoviesController {
         }
     }
 
+    @PostMapping("/popular/{id}")
+    public ResponseEntity<Void> setPopular(@PathVariable String id) {
+        try {
+            this.movieService.setPopular(id, true);
+            return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateMovie(@PathVariable String id, @Valid @RequestBody MovieUpdateDto movieUpdateDto) {
         try {
@@ -68,6 +83,16 @@ public class MoviesController {
         try {
             this.movieService.deleteById(id);
             return ResponseEntity.noContent().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/popular/{id}")
+    public ResponseEntity<Void> unsetPopular(@PathVariable String id) {
+        try {
+            this.movieService.setPopular(id, false);
+            return ResponseEntity.ok().build();
         } catch (EmptyResultDataAccessException ex) {
             return ResponseEntity.notFound().build();
         }

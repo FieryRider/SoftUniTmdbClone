@@ -73,6 +73,25 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public List<BasicPersonDto> getPopular() {
+        List<Person> people = this.personRepository.getAllByPopularEquals(true);
+        List<BasicPersonDto> basicPersonDtos = new ArrayList<>();
+        for (Person person : people) {
+            BasicPersonDto basicPersonDto = this.modelMapper.map(person, BasicPersonDto.class);
+            basicPersonDtos.add(basicPersonDto);
+        }
+
+        return basicPersonDtos;
+    }
+
+    @Override
+    public void setPopular(String id, boolean popular) {
+        Person person = this.personRepository.findById(id).orElseThrow();
+        person.setPopular(true);
+        this.personRepository.saveAndFlush(person);
+    }
+
+    @Override
     public EntityIdDto add(PersonCreateDto personCreateDto) {
         Person person = this.modelMapper.map(personCreateDto, Person.class);
         Person saved = this.personRepository.saveAndFlush(person);

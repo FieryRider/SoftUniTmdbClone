@@ -47,6 +47,8 @@ public class Person extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "character_id"))
     private Set<Character> playing;
 
+    private boolean popular;
+
     public String getName() {
         return this.name;
     }
@@ -167,6 +169,14 @@ public class Person extends BaseEntity {
         this.playing = playing;
     }
 
+    public boolean isPopular() {
+        return this.popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
+    }
+
     public Person() {
     }
 
@@ -176,5 +186,6 @@ public class Person extends BaseEntity {
         this.profilePictureUrl = profilePictureUrl;
         this.gender = gender;
         this.mainRole = mainRole;
+        this.popular = false;
     }
 }

@@ -2,10 +2,10 @@ package com.fieryrider.tmdbclone.web;
 
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
-import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.services.TvShowService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -31,6 +31,11 @@ public class TvShowsController {
         return this.tvShowService.getAll();
     }
 
+    @GetMapping("/popular")
+    public List<BasicTvShowDto> getPopular() {
+        return this.tvShowService.getPopular();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TvShowDetailsDto> getTvShow(@PathVariable String id) {
         try {
@@ -47,6 +52,16 @@ public class TvShowsController {
             EntityIdDto tvShowId = this.tvShowService.add(tvShowCreateDto);
             return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(tvShowId);
         } catch (NoSuchCastFound | NoSuchDirectorFound | NoSuchProducerFound | NoSuchWriterFound ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/popular/{id}")
+    public ResponseEntity<Void> setPopular(@PathVariable String id) {
+        try {
+            this.tvShowService.setPopular(id, true);
+            return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException ex) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -72,5 +87,13 @@ public class TvShowsController {
         }
     }
 
-
+    @DeleteMapping("/popular/{id}")
+    public ResponseEntity<Void> unsetPopular(@PathVariable String id) {
+        try {
+            this.tvShowService.setPopular(id, false);
+            return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
