@@ -5,5 +5,6 @@ import com.fieryrider.tmdbclone.models.entities.Show;
 
 public interface ShowService {
     Show getShow(String id);
+
     void removeCharacterFromShow(String showId, Character character);
 }
