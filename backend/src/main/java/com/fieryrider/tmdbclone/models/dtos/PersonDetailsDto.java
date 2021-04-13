@@ -3,6 +3,7 @@ package com.fieryrider.tmdbclone.models.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonKnownForDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonShowDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Gender;
@@ -43,6 +44,8 @@ public class PersonDetailsDto {
     private Set<PersonShowDto> writing;
 
     private Set<PersonShowDto> directing;
+
+    private Set<CharacterPropertyDto> playing;
 
     public String getId() {
         return this.id;
@@ -162,6 +165,14 @@ public class PersonDetailsDto {
 
     public void setDirecting(Set<PersonShowDto> directing) {
         this.directing = directing;
+    }
+
+    public Set<CharacterPropertyDto> getPlaying() {
+        return this.playing;
+    }
+
+    public void setPlaying(Set<CharacterPropertyDto> playing) {
+        this.playing = playing;
     }
 
     public PersonDetailsDto() {

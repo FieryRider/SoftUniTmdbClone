@@ -1,5 +1,6 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.MovieCastDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowCrewDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
@@ -32,6 +33,8 @@ public class TvShowDetailsDto {
     private Set<MovieCastDto> cast;
 
     private Set<ShowCrewDto> creators;
+
+    private Set<CharacterPropertyDto> characters;
 
     public String getId() {
         return this.id;
@@ -127,6 +130,14 @@ public class TvShowDetailsDto {
 
     public void setCreators(Set<ShowCrewDto> creators) {
         this.creators = creators;
+    }
+
+    public Set<CharacterPropertyDto> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Set<CharacterPropertyDto> characters) {
+        this.characters = characters;
     }
 
     public TvShowDetailsDto() {
