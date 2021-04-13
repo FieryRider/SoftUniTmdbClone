@@ -63,6 +63,8 @@ public class MovieCreateDto {
     @NotNull(message = "You must specify release date")
     private LocalDate releaseDate;
 
+    private Set<String> characters;
+
     public String getTitle() {
         return this.title;
     }
@@ -173,6 +175,14 @@ public class MovieCreateDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Set<String> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Set<String> characters) {
+        this.characters = characters;
     }
 
     public MovieCreateDto() {

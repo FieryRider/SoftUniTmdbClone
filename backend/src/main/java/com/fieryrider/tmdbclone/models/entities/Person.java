@@ -41,7 +41,7 @@ public class Person extends BaseEntity {
     private Set<Movie> directing;
     @ManyToMany(mappedBy = "creators", fetch = FetchType.EAGER)
     private Set<TvShow> creating;
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "people_characters",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "character_id"))

@@ -23,5 +23,6 @@ public class ShowServiceImpl implements ShowService {
     public void removeCharacterFromShow(String showId, Character character) {
         Show show = this.showRepository.findById(showId).orElseThrow();
         show.getCharacters().remove(character);
+        this.showRepository.saveAndFlush(show);
     }
 }

@@ -1,6 +1,7 @@
 package com.fieryrider.tmdbclone.services.impl;
 
 import com.fieryrider.tmdbclone.exceptions.NoSuchCastFound;
+import com.fieryrider.tmdbclone.exceptions.NoSuchCharacterFound;
 import com.fieryrider.tmdbclone.exceptions.NoSuchProducerFound;
 import com.fieryrider.tmdbclone.exceptions.NoSuchTvShowException;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
@@ -15,6 +16,7 @@ import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
 import com.fieryrider.tmdbclone.repositories.TvShowRepository;
+import com.fieryrider.tmdbclone.services.CharacterService;
 import com.fieryrider.tmdbclone.services.PersonService;
 import com.fieryrider.tmdbclone.services.TvShowService;
 import org.modelmapper.ModelMapper;
@@ -27,11 +29,13 @@ import java.util.*;
 public class TvShowServiceImpl implements TvShowService {
     private final TvShowRepository tvShowRepository;
     private final PersonService personService;
+    private final CharacterService characterService;
     private final ModelMapper modelMapper;
 
-    public TvShowServiceImpl(TvShowRepository tvShowRepository, PersonService personService, ModelMapper modelMapper) {
+    public TvShowServiceImpl(TvShowRepository tvShowRepository, PersonService personService, CharacterService characterService, ModelMapper modelMapper) {
         this.tvShowRepository = tvShowRepository;
         this.personService = personService;
+        this.characterService = characterService;
         this.modelMapper = modelMapper;
     }
 
@@ -151,6 +155,26 @@ public class TvShowServiceImpl implements TvShowService {
             for (Person creator : currentCreators)
                 creator.getCreating().add(tvShow);
         }
+        if (tvShowUpdateDto.getCharacters() !=  null) {
+            Set<Character> newCharacters = new HashSet<>();
+            for (String characterId : tvShowUpdateDto.getCharacters()) {
+                try {
+                    newCharacters.add(this.characterService.getById(characterId));
+                } catch (NoSuchElementException ex) {
+                    throw new NoSuchCharacterFound();
+                }
+            }
+
+            Set<Character> currentCharacters = tvShow.getCharacters();
+            for (Character character : currentCharacters) {
+                if (!newCharacters.contains(character))
+                    character.getFrom().remove(tvShow);
+            }
+            currentCharacters.removeIf(character -> !newCharacters.contains(character));
+            currentCharacters.addAll(newCharacters);
+            for (Character character : currentCharacters)
+                character.getFrom().add(tvShow);
+        }
 
         if (tvShowUpdateDto.getType() != null)
             tvShow.setType(TvShowType.valueOf(tvShowUpdateDto.getType()));
@@ -172,6 +196,7 @@ public class TvShowServiceImpl implements TvShowService {
             actor.getActing().remove(tvShow);
         for (Character character : tvShow.getCharacters())
             character.getFrom().remove(tvShow);
+
         this.tvShowRepository.deleteById(id);
     }
 }

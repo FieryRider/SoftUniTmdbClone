@@ -1,33 +1,35 @@
 package com.fieryrider.tmdbclone.services.impl;
 
+import com.fieryrider.tmdbclone.exceptions.NoSuchCharacterFound;
 import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.entities.*;
 import com.fieryrider.tmdbclone.models.entities.Character;
+import com.fieryrider.tmdbclone.models.entities.*;
 import com.fieryrider.tmdbclone.models.entities.enums.Gender;
 import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
 import com.fieryrider.tmdbclone.repositories.PersonRepository;
+import com.fieryrider.tmdbclone.services.CharacterService;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
+    private final CharacterService characterService;
     private final ModelMapper modelMapper;
 
-    public PersonServiceImpl(PersonRepository personRepository, ModelMapper modelMapper) {
+    public PersonServiceImpl(PersonRepository personRepository, CharacterService characterService, ModelMapper modelMapper) {
         this.personRepository = personRepository;
+        this.characterService = characterService;
         this.modelMapper = modelMapper;
     }
 
@@ -91,6 +93,26 @@ public class PersonServiceImpl implements PersonService {
             person.setGender(Gender.valueOf(personUpdateDto.getGender()));
         if (personUpdateDto.getMainRole() != null)
             person.setMainRole(PersonRole.valueOf(personUpdateDto.getMainRole()));
+        if (personUpdateDto.getPlaying() != null) {
+            Set<Character> newPlaying = new HashSet<>();
+            for (String characterId : personUpdateDto.getPlaying()) {
+                try {
+                    newPlaying.add(this.characterService.getById(characterId));
+                } catch (NoSuchElementException ex) {
+                    throw new NoSuchCharacterFound();
+                }
+            }
+
+            Set<Character> currentPlaying = person.getPlaying();
+            for (Character character : currentPlaying) {
+                if (!newPlaying.contains(character))
+                    character.getPlayedBy().remove(person);
+            }
+            currentPlaying.removeIf(character -> !newPlaying.contains(character));
+            currentPlaying.addAll(newPlaying);
+            for (Character character : currentPlaying)
+                character.getPlayedBy().add(person);
+        }
 
         this.personRepository.saveAndFlush(person);
     }
@@ -110,6 +132,8 @@ public class PersonServiceImpl implements PersonService {
             movie.getDirectors().remove(person);
         for (TvShow tvShow : person.getCreating())
             tvShow.getCreators().remove(person);
+        for (Character character : person.getPlaying())
+            character.getPlayedBy().remove(person);
 
         this.personRepository.delete(person);
     }
@@ -119,5 +143,6 @@ public class PersonServiceImpl implements PersonService {
     public void removeCharacterFromPerson(String personId, Character character) {
         Person person = this.personRepository.findById(personId).orElseThrow();
         person.getPlaying().remove(character);
+        this.personRepository.saveAndFlush(person);
     }
 }

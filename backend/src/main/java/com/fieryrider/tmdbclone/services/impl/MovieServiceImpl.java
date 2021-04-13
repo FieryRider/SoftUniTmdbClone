@@ -12,6 +12,7 @@ import com.fieryrider.tmdbclone.models.entities.Person;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
 import com.fieryrider.tmdbclone.repositories.MovieRepository;
+import com.fieryrider.tmdbclone.services.CharacterService;
 import com.fieryrider.tmdbclone.services.MovieService;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.modelmapper.ModelMapper;
@@ -24,11 +25,13 @@ import java.util.*;
 public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final PersonService personService;
+    private final CharacterService characterService;
     private final ModelMapper modelMapper;
 
-    public MovieServiceImpl(MovieRepository movieRepository, PersonService personService, ModelMapper modelMapper) {
+    public MovieServiceImpl(MovieRepository movieRepository, PersonService personService, CharacterService characterService, ModelMapper modelMapper) {
         this.movieRepository = movieRepository;
         this.personService = personService;
+        this.characterService = characterService;
         this.modelMapper = modelMapper;
     }
 
@@ -216,6 +219,26 @@ public class MovieServiceImpl implements MovieService {
             currentCast.addAll(newCast);
             for (Person actor : currentCast)
                 actor.getActing().add(movie);
+        }
+        if (movieUpdateDto.getCharacters() !=  null) {
+            Set<Character> newCharacters = new HashSet<>();
+            for (String characterId : movieUpdateDto.getCharacters()) {
+                try {
+                    newCharacters.add(this.characterService.getById(characterId));
+                } catch (NoSuchElementException ex) {
+                    throw new NoSuchCharacterFound();
+                }
+            }
+
+            Set<Character> currentCharacters = movie.getCharacters();
+            for (Character character : currentCharacters) {
+                if (!newCharacters.contains(character))
+                    character.getFrom().remove(movie);
+            }
+            currentCharacters.removeIf(character -> !newCharacters.contains(character));
+            currentCharacters.addAll(newCharacters);
+            for (Character character : currentCharacters)
+                character.getFrom().add(movie);
         }
 
         this.movieRepository.saveAndFlush(movie);

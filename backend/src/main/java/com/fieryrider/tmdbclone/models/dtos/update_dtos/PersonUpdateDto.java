@@ -11,6 +11,7 @@ import com.fieryrider.tmdbclone.validation.NullOrNotBlank;
 
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.util.Set;
 
 public class PersonUpdateDto {
     @NullOrNotBlank(message = "Name cannot be empty")
@@ -35,6 +36,8 @@ public class PersonUpdateDto {
 
     @EnumNameValid(enumClass = PersonRole.class, message = "Person role must be one of the predefined")
     private String mainRole;
+
+    private Set<String> playing;
 
     public String getName() {
         return this.name;
@@ -98,6 +101,14 @@ public class PersonUpdateDto {
 
     public void setMainRole(String mainRole) {
         this.mainRole = mainRole;
+    }
+
+    public Set<String> getPlaying() {
+        return this.playing;
+    }
+
+    public void setPlaying(Set<String> playing) {
+        this.playing = playing;
     }
 
     public PersonUpdateDto() {
