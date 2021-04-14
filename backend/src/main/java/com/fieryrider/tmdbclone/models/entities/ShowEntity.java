@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 @Table(name = "shows")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Show extends BaseEntity {
+public abstract class ShowEntity extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
@@ -35,13 +35,13 @@ public abstract class Show extends BaseEntity {
     @JoinTable(name = "shows_cast",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id"))
-    private Set<Person> cast;
+    private Set<PersonEntity> cast;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "shows_characters",
             joinColumns = @JoinColumn(name = "show_id"),
             inverseJoinColumns = @JoinColumn(name = "character_id"))
-    private Set<Character> characters;
+    private Set<CharacterEntity> characters;
 
     private boolean popular;
 
@@ -102,19 +102,19 @@ public abstract class Show extends BaseEntity {
         this.genres = genres;
     }
 
-    public Set<Person> getCast() {
+    public Set<PersonEntity> getCast() {
         return this.cast;
     }
 
-    public void setCast(Set<Person> cast) {
+    public void setCast(Set<PersonEntity> cast) {
         this.cast = cast;
     }
 
-    public Set<Character> getCharacters() {
+    public Set<CharacterEntity> getCharacters() {
         return this.characters;
     }
 
-    public void setCharacters(Set<Character> characters) {
+    public void setCharacters(Set<CharacterEntity> characters) {
         this.characters = characters;
     }
 
@@ -126,10 +126,10 @@ public abstract class Show extends BaseEntity {
         this.popular = popular;
     }
 
-    public Show() {
+    public ShowEntity() {
     }
 
-    public Show(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres) {
+    public ShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres) {
         this.title = title;
         this.overview = overview;
         this.rating = rating;
@@ -140,7 +140,7 @@ public abstract class Show extends BaseEntity {
         this.popular = false;
     }
 
-    public Show(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast) {
+    public ShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast) {
         this.title = title;
         this.overview = overview;
         this.rating = rating;

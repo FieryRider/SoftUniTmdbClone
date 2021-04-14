@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "people")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Person extends BaseEntity {
+public class PersonEntity extends BaseEntity {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
@@ -30,22 +30,22 @@ public class Person extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PersonRole mainRole;
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Show> knownFor;
+    private Set<ShowEntity> knownFor;
     @ManyToMany(mappedBy = "cast", fetch = FetchType.EAGER)
-    private Set<Show> acting;
+    private Set<ShowEntity> acting;
     @ManyToMany(mappedBy = "producers", fetch = FetchType.EAGER)
-    private Set<Movie> producing;
+    private Set<MovieEntity> producing;
     @ManyToMany(mappedBy = "writers", fetch = FetchType.EAGER)
-    private Set<Movie> writing;
+    private Set<MovieEntity> writing;
     @ManyToMany(mappedBy = "directors", fetch = FetchType.EAGER)
-    private Set<Movie> directing;
+    private Set<MovieEntity> directing;
     @ManyToMany(mappedBy = "creators", fetch = FetchType.EAGER)
-    private Set<TvShow> creating;
+    private Set<TvShowEntity> creating;
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "people_characters",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "character_id"))
-    private Set<Character> playing;
+    private Set<CharacterEntity> playing;
 
     private boolean popular;
 
@@ -113,59 +113,59 @@ public class Person extends BaseEntity {
         this.mainRole = mainRole;
     }
 
-    public Set<Show> getKnownFor() {
+    public Set<ShowEntity> getKnownFor() {
         return this.knownFor;
     }
 
-    public void setKnownFor(Set<Show> knownFor) {
+    public void setKnownFor(Set<ShowEntity> knownFor) {
         this.knownFor = knownFor;
     }
 
-    public Set<Show> getActing() {
+    public Set<ShowEntity> getActing() {
         return this.acting;
     }
 
-    public void setActing(Set<Show> acting) {
+    public void setActing(Set<ShowEntity> acting) {
         this.acting = acting;
     }
 
-    public Set<Movie> getProducing() {
+    public Set<MovieEntity> getProducing() {
         return this.producing;
     }
 
-    public void setProducing(Set<Movie> producing) {
+    public void setProducing(Set<MovieEntity> producing) {
         this.producing = producing;
     }
 
-    public Set<Movie> getWriting() {
+    public Set<MovieEntity> getWriting() {
         return this.writing;
     }
 
-    public void setWriting(Set<Movie> writing) {
+    public void setWriting(Set<MovieEntity> writing) {
         this.writing = writing;
     }
 
-    public Set<Movie> getDirecting() {
+    public Set<MovieEntity> getDirecting() {
         return this.directing;
     }
 
-    public void setDirecting(Set<Movie> directing) {
+    public void setDirecting(Set<MovieEntity> directing) {
         this.directing = directing;
     }
 
-    public Set<TvShow> getCreating() {
+    public Set<TvShowEntity> getCreating() {
         return this.creating;
     }
 
-    public void setCreating(Set<TvShow> creating) {
+    public void setCreating(Set<TvShowEntity> creating) {
         this.creating = creating;
     }
 
-    public Set<Character> getPlaying() {
+    public Set<CharacterEntity> getPlaying() {
         return this.playing;
     }
 
-    public void setPlaying(Set<Character> playing) {
+    public void setPlaying(Set<CharacterEntity> playing) {
         this.playing = playing;
     }
 
@@ -177,10 +177,10 @@ public class Person extends BaseEntity {
         this.popular = popular;
     }
 
-    public Person() {
+    public PersonEntity() {
     }
 
-    public Person(String name, int age, String profilePictureUrl, Gender gender, PersonRole mainRole) {
+    public PersonEntity(String name, int age, String profilePictureUrl, Gender gender, PersonRole mainRole) {
         this.name = name;
         this.age = age;
         this.profilePictureUrl = profilePictureUrl;

@@ -7,7 +7,7 @@ import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.entities.Character;
+import com.fieryrider.tmdbclone.models.entities.CharacterEntity;
 import com.fieryrider.tmdbclone.models.entities.*;
 import com.fieryrider.tmdbclone.models.entities.enums.Gender;
 import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
@@ -39,15 +39,15 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person getPersonById(String id) {
+    public PersonEntity getPersonById(String id) {
         return this.personRepository.findById(id).orElseThrow();
     }
 
     @Override
     public List<BasicPersonDto> getAll() {
-        List<Person> people = this.personRepository.findAll();
+        List<PersonEntity> people = this.personRepository.findAll();
         List<BasicPersonDto> basicPersonDtos = new ArrayList<>();
-        for (Person person : people) {
+        for (PersonEntity person : people) {
             BasicPersonDto basicPersonDto = this.modelMapper.map(person, BasicPersonDto.class);
             List<String> knownFor = person.getKnownFor().stream().map(BaseEntity::getId).collect(Collectors.toList());
             basicPersonDto.setKnownFor(knownFor);
@@ -59,7 +59,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonDetailsDto getById(String id) {
-        Person person;
+        PersonEntity person;
         try {
             person = this.personRepository.findById(id).orElseThrow();
         } catch (NoSuchElementException ex) {
@@ -74,9 +74,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<BasicPersonDto> getPopular() {
-        List<Person> people = this.personRepository.getAllByPopularEquals(true);
+        List<PersonEntity> people = this.personRepository.getAllByPopularEquals(true);
         List<BasicPersonDto> basicPersonDtos = new ArrayList<>();
-        for (Person person : people) {
+        for (PersonEntity person : people) {
             BasicPersonDto basicPersonDto = this.modelMapper.map(person, BasicPersonDto.class);
             basicPersonDtos.add(basicPersonDto);
         }
@@ -86,22 +86,22 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void setPopular(String id, boolean popular) {
-        Person person = this.personRepository.findById(id).orElseThrow();
+        PersonEntity person = this.personRepository.findById(id).orElseThrow();
         person.setPopular(true);
         this.personRepository.saveAndFlush(person);
     }
 
     @Override
     public EntityIdDto add(PersonCreateDto personCreateDto) {
-        Person person = this.modelMapper.map(personCreateDto, Person.class);
-        Person saved = this.personRepository.saveAndFlush(person);
+        PersonEntity person = this.modelMapper.map(personCreateDto, PersonEntity.class);
+        PersonEntity saved = this.personRepository.saveAndFlush(person);
         return new EntityIdDto(saved.getId());
     }
 
     @Override
     @Transactional
     public void edit(String id, PersonUpdateDto personUpdateDto) {
-        Person person = this.personRepository.findById(id).orElseThrow();
+        PersonEntity person = this.personRepository.findById(id).orElseThrow();
         if (personUpdateDto.getName() != null)
             person.setName(personUpdateDto.getName());
         if (personUpdateDto.getAge() != null)
@@ -119,7 +119,7 @@ public class PersonServiceImpl implements PersonService {
         if (personUpdateDto.getMainRole() != null)
             person.setMainRole(PersonRole.valueOf(personUpdateDto.getMainRole()));
         if (personUpdateDto.getPlaying() != null) {
-            Set<Character> newPlaying = new HashSet<>();
+            Set<CharacterEntity> newPlaying = new HashSet<>();
             for (String characterId : personUpdateDto.getPlaying()) {
                 try {
                     newPlaying.add(this.characterService.getCharacterById(characterId));
@@ -128,14 +128,14 @@ public class PersonServiceImpl implements PersonService {
                 }
             }
 
-            Set<Character> currentPlaying = person.getPlaying();
-            for (Character character : currentPlaying) {
+            Set<CharacterEntity> currentPlaying = person.getPlaying();
+            for (CharacterEntity character : currentPlaying) {
                 if (!newPlaying.contains(character))
                     character.getPlayedBy().remove(person);
             }
             currentPlaying.removeIf(character -> !newPlaying.contains(character));
             currentPlaying.addAll(newPlaying);
-            for (Character character : currentPlaying)
+            for (CharacterEntity character : currentPlaying)
                 character.getPlayedBy().add(person);
         }
 
@@ -145,19 +145,19 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public void deleteById(String id) {
-        Person person = this.personRepository.findById(id).orElseThrow();
+        PersonEntity person = this.personRepository.findById(id).orElseThrow();
 
-        for (Show show : person.getActing())
+        for (ShowEntity show : person.getActing())
             show.getCast().remove(person);
-        for (Movie movie : person.getWriting())
+        for (MovieEntity movie : person.getWriting())
             movie.getWriters().remove(person);
-        for (Movie movie : person.getProducing())
+        for (MovieEntity movie : person.getProducing())
             movie.getProducers().remove(person);
-        for (Movie movie : person.getDirecting())
+        for (MovieEntity movie : person.getDirecting())
             movie.getDirectors().remove(person);
-        for (TvShow tvShow : person.getCreating())
+        for (TvShowEntity tvShow : person.getCreating())
             tvShow.getCreators().remove(person);
-        for (Character character : person.getPlaying())
+        for (CharacterEntity character : person.getPlaying())
             character.getPlayedBy().remove(person);
 
         this.personRepository.delete(person);
@@ -165,8 +165,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public void removeCharacterFromPerson(String personId, Character character) {
-        Person person = this.personRepository.findById(personId).orElseThrow();
+    public void removeCharacterFromPerson(String personId, CharacterEntity character) {
+        PersonEntity person = this.personRepository.findById(personId).orElseThrow();
         person.getPlaying().remove(character);
         this.personRepository.saveAndFlush(person);
     }

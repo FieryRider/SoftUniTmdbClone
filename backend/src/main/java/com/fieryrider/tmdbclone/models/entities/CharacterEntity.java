@@ -5,15 +5,15 @@ import java.util.Set;
 
 @Entity
 @Table(name = "characters")
-public class Character extends BaseEntity {
+public class CharacterEntity extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
     @ManyToMany(mappedBy = "characters", fetch = FetchType.EAGER)
-    private Set<Show> from;
+    private Set<ShowEntity> from;
 
     @ManyToMany(mappedBy = "playing", fetch = FetchType.EAGER)
-    private Set<Person> playedBy;
+    private Set<PersonEntity> playedBy;
 
     public String getName() {
         return this.name;
@@ -23,26 +23,26 @@ public class Character extends BaseEntity {
         this.name = name;
     }
 
-    public Set<Show> getFrom() {
+    public Set<ShowEntity> getFrom() {
         return this.from;
     }
 
-    public void setFrom(Set<Show> from) {
+    public void setFrom(Set<ShowEntity> from) {
         this.from = from;
     }
 
-    public Set<Person> getPlayedBy() {
+    public Set<PersonEntity> getPlayedBy() {
         return this.playedBy;
     }
 
-    public void setPlayedBy(Set<Person> playedBy) {
+    public void setPlayedBy(Set<PersonEntity> playedBy) {
         this.playedBy = playedBy;
     }
 
-    public Character() {
+    public CharacterEntity() {
     }
 
-    public Character(String name) {
+    public CharacterEntity(String name) {
         this.name = name;
     }
 }

@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "movies")
-public class Movie extends Show {
+public class MovieEntity extends ShowEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MovieStatus status;
@@ -24,19 +24,19 @@ public class Movie extends Show {
     @JoinTable(name = "movies_producers",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "producer_id", referencedColumnName = "id"))
-    private Set<Person> producers;
+    private Set<PersonEntity> producers;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "movies_directors",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id"))
-    private Set<Person> directors;
+    private Set<PersonEntity> directors;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "movies_writers",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "writer_id", referencedColumnName = "id"))
-    private Set<Person> writers;
+    private Set<PersonEntity> writers;
 
 
     public MovieStatus getStatus() {
@@ -71,47 +71,47 @@ public class Movie extends Show {
         this.releaseDate = releaseDate;
     }
 
-    public Set<Person> getProducers() {
+    public Set<PersonEntity> getProducers() {
         return this.producers;
     }
 
-    public void setProducers(Set<Person> producers) {
+    public void setProducers(Set<PersonEntity> producers) {
         this.producers = producers;
     }
 
-    public Set<Person> getDirectors() {
+    public Set<PersonEntity> getDirectors() {
         return this.directors;
     }
 
-    public void setDirectors(Set<Person> directors) {
+    public void setDirectors(Set<PersonEntity> directors) {
         this.directors = directors;
     }
 
-    public Set<Person> getWriters() {
+    public Set<PersonEntity> getWriters() {
         return this.writers;
     }
 
-    public void setWriters(Set<Person> writers) {
+    public void setWriters(Set<PersonEntity> writers) {
         this.writers = writers;
     }
 
-    public Movie() {
+    public MovieEntity() {
     }
 
-    public Movie(MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
+    public MovieEntity(MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
         this.status = status;
         this.budget = budget;
         this.releaseDate = releaseDate;
     }
 
-    public Movie(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
+    public MovieEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
         super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres);
         this.status = status;
         this.budget = budget;
         this.releaseDate = releaseDate;
     }
 
-    public Movie(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> producers, Set<Person> directors, Set<Person> writers, MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
+    public MovieEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast, Set<PersonEntity> producers, Set<PersonEntity> directors, Set<PersonEntity> writers, MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
         super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast);
         this.status = status;
         this.budget = budget;

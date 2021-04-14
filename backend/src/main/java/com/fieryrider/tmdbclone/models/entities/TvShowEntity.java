@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tv_shows")
-public class TvShow extends Show {
+public class TvShowEntity extends ShowEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TvShowType type;
@@ -25,7 +25,7 @@ public class TvShow extends Show {
     @JoinTable(name = "tv_shows_creators",
             joinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "creator_id", referencedColumnName = "id"))
-    private Set<Person> creators;
+    private Set<PersonEntity> creators;
 
     public TvShowType getType() {
         return this.type;
@@ -51,25 +51,25 @@ public class TvShow extends Show {
         this.status = status;
     }
 
-    public Set<Person> getCreators() {
+    public Set<PersonEntity> getCreators() {
         return this.creators;
     }
 
-    public void setCreators(Set<Person> creators) {
+    public void setCreators(Set<PersonEntity> creators) {
         this.creators = creators;
     }
 
-    public TvShow() {
+    public TvShowEntity() {
     }
 
-    public TvShow(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, TvShowType type, TvShowStatus status, String network) {
+    public TvShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, TvShowType type, TvShowStatus status, String network) {
         super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres);
         this.type = type;
         this.status = status;
         this.network = network;
     }
 
-    public TvShow(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<Person> cast, Set<Person> creators, TvShowType type, TvShowStatus status, String network) {
+    public TvShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast, Set<PersonEntity> creators, TvShowType type, TvShowStatus status, String network) {
         super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast);
         this.type = type;
         this.status = status;

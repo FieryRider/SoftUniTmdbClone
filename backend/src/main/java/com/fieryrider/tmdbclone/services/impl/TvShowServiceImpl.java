@@ -9,9 +9,9 @@ import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.entities.Character;
-import com.fieryrider.tmdbclone.models.entities.Person;
-import com.fieryrider.tmdbclone.models.entities.TvShow;
+import com.fieryrider.tmdbclone.models.entities.CharacterEntity;
+import com.fieryrider.tmdbclone.models.entities.PersonEntity;
+import com.fieryrider.tmdbclone.models.entities.TvShowEntity;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
@@ -41,9 +41,9 @@ public class TvShowServiceImpl implements TvShowService {
 
     @Override
     public List<BasicTvShowDto> getAll() {
-        List<TvShow> tvShows = this.tvShowRepository.findAll();
+        List<TvShowEntity> tvShows = this.tvShowRepository.findAll();
         List<BasicTvShowDto> basicTvShowDtos = new ArrayList<>();
-        for (TvShow tvShow : tvShows)
+        for (TvShowEntity tvShow : tvShows)
             basicTvShowDtos.add(this.modelMapper.map(tvShow, BasicTvShowDto.class));
 
         return basicTvShowDtos;
@@ -51,7 +51,7 @@ public class TvShowServiceImpl implements TvShowService {
 
     @Override
     public TvShowDetailsDto getById(String id) {
-        TvShow tvShow;
+        TvShowEntity tvShow;
         try {
             tvShow = this.tvShowRepository.findById(id).orElseThrow();
         } catch (NoSuchElementException ex) {
@@ -65,9 +65,9 @@ public class TvShowServiceImpl implements TvShowService {
 
     @Override
     public List<BasicTvShowDto> getPopular() {
-        List<TvShow> tvShows = this.tvShowRepository.getAllByPopularEquals(true);
+        List<TvShowEntity> tvShows = this.tvShowRepository.getAllByPopularEquals(true);
         List<BasicTvShowDto> basicTvShowDtos = new ArrayList<>();
-        for (TvShow tvShow : tvShows) {
+        for (TvShowEntity tvShow : tvShows) {
             BasicTvShowDto basicTvShowDto = this.modelMapper.map(tvShow, BasicTvShowDto.class);
             basicTvShowDtos.add(basicTvShowDto);
         }
@@ -77,7 +77,7 @@ public class TvShowServiceImpl implements TvShowService {
 
     @Override
     public void setPopular(String id, boolean popular) {
-        TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
+        TvShowEntity tvShow = this.tvShowRepository.findById(id).orElseThrow();
         tvShow.setPopular(popular);
         this.tvShowRepository.saveAndFlush(tvShow);
     }
@@ -85,12 +85,12 @@ public class TvShowServiceImpl implements TvShowService {
     @Override
     @Transactional
     public EntityIdDto add(TvShowCreateDto tvShowCreateDto) {
-        TvShow tvShow = this.modelMapper.map(tvShowCreateDto, TvShow.class);
-        Set<Person> cast = new HashSet<>();
-        Set<Person> creators = new HashSet<>();
+        TvShowEntity tvShow = this.modelMapper.map(tvShowCreateDto, TvShowEntity.class);
+        Set<PersonEntity> cast = new HashSet<>();
+        Set<PersonEntity> creators = new HashSet<>();
         for (String creatorId : tvShowCreateDto.getCreators()) {
             try {
-                Person creator = this.personService.getPersonById(creatorId);
+                PersonEntity creator = this.personService.getPersonById(creatorId);
                 creators.add(creator);
                 creator.getCreating().add(tvShow);
             } catch (NoSuchElementException ex) {
@@ -99,7 +99,7 @@ public class TvShowServiceImpl implements TvShowService {
         }
         for (String actorId : tvShowCreateDto.getCast()) {
             try {
-                Person actor = this.personService.getPersonById(actorId);
+                PersonEntity actor = this.personService.getPersonById(actorId);
                 cast.add(actor);
                 actor.getActing().add(tvShow);
             } catch (NoSuchElementException ex) {
@@ -108,14 +108,14 @@ public class TvShowServiceImpl implements TvShowService {
         }
         tvShow.setCast(cast);
         tvShow.setCreators(creators);
-        TvShow saved = this.tvShowRepository.saveAndFlush(tvShow);
+        TvShowEntity saved = this.tvShowRepository.saveAndFlush(tvShow);
         return new EntityIdDto(saved.getId());
     }
 
     @Override
     @Transactional
     public void edit(String id, TvShowUpdateDto tvShowUpdateDto) {
-        TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
+        TvShowEntity tvShow = this.tvShowRepository.findById(id).orElseThrow();
 
         if (tvShowUpdateDto.getTitle() != null)
             tvShow.setTitle(tvShowUpdateDto.getTitle());
@@ -136,7 +136,7 @@ public class TvShowServiceImpl implements TvShowService {
         }
 
         if (tvShowUpdateDto.getCast() != null) {
-            Set<Person> newCast = new HashSet<>();
+            Set<PersonEntity> newCast = new HashSet<>();
             for (String actorId : tvShowUpdateDto.getCast()) {
                 try {
                     newCast.add(this.personService.getPersonById(actorId));
@@ -145,18 +145,18 @@ public class TvShowServiceImpl implements TvShowService {
                 }
             }
 
-            Set<Person> currentCast = tvShow.getCast();
-            for (Person actor : currentCast) {
+            Set<PersonEntity> currentCast = tvShow.getCast();
+            for (PersonEntity actor : currentCast) {
                 if (!newCast.contains(actor))
                     actor.getActing().remove(tvShow);
             }
             currentCast.removeIf(actor -> !newCast.contains(actor));
             currentCast.addAll(newCast);
-            for (Person actor : currentCast)
+            for (PersonEntity actor : currentCast)
                 actor.getActing().add(tvShow);
         }
         if (tvShowUpdateDto.getCreators() != null) {
-            Set<Person> newCreators = new HashSet<>();
+            Set<PersonEntity> newCreators = new HashSet<>();
             for (String creatorId : tvShowUpdateDto.getCreators()) {
                 try {
                     newCreators.add(this.personService.getPersonById(creatorId));
@@ -165,18 +165,18 @@ public class TvShowServiceImpl implements TvShowService {
                 }
             }
 
-            Set<Person> currentCreators = tvShow.getCreators();
-            for (Person creator : currentCreators) {
+            Set<PersonEntity> currentCreators = tvShow.getCreators();
+            for (PersonEntity creator : currentCreators) {
                 if (!newCreators.contains(creator))
                     creator.getCreating().remove(tvShow);
             }
             currentCreators.removeIf(creator -> !newCreators.contains(creator));
             currentCreators.addAll(newCreators);
-            for (Person creator : currentCreators)
+            for (PersonEntity creator : currentCreators)
                 creator.getCreating().add(tvShow);
         }
         if (tvShowUpdateDto.getCharacters() !=  null) {
-            Set<Character> newCharacters = new HashSet<>();
+            Set<CharacterEntity> newCharacters = new HashSet<>();
             for (String characterId : tvShowUpdateDto.getCharacters()) {
                 try {
                     newCharacters.add(this.characterService.getCharacterById(characterId));
@@ -185,14 +185,14 @@ public class TvShowServiceImpl implements TvShowService {
                 }
             }
 
-            Set<Character> currentCharacters = tvShow.getCharacters();
-            for (Character character : currentCharacters) {
+            Set<CharacterEntity> currentCharacters = tvShow.getCharacters();
+            for (CharacterEntity character : currentCharacters) {
                 if (!newCharacters.contains(character))
                     character.getFrom().remove(tvShow);
             }
             currentCharacters.removeIf(character -> !newCharacters.contains(character));
             currentCharacters.addAll(newCharacters);
-            for (Character character : currentCharacters)
+            for (CharacterEntity character : currentCharacters)
                 character.getFrom().add(tvShow);
         }
 
@@ -209,12 +209,12 @@ public class TvShowServiceImpl implements TvShowService {
     @Override
     @Transactional
     public void deleteById(String id) {
-        TvShow tvShow = this.tvShowRepository.findById(id).orElseThrow();
-        for (Person creator : tvShow.getCreators())
+        TvShowEntity tvShow = this.tvShowRepository.findById(id).orElseThrow();
+        for (PersonEntity creator : tvShow.getCreators())
             creator.getCreating().remove(tvShow);
-        for (Person actor : tvShow.getCast())
+        for (PersonEntity actor : tvShow.getCast())
             actor.getActing().remove(tvShow);
-        for (Character character : tvShow.getCharacters())
+        for (CharacterEntity character : tvShow.getCharacters())
             character.getFrom().remove(tvShow);
 
         this.tvShowRepository.deleteById(id);

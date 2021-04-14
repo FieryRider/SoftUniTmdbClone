@@ -6,9 +6,9 @@ import com.fieryrider.tmdbclone.models.dtos.MovieDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.MovieUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.entities.Character;
-import com.fieryrider.tmdbclone.models.entities.Movie;
-import com.fieryrider.tmdbclone.models.entities.Person;
+import com.fieryrider.tmdbclone.models.entities.CharacterEntity;
+import com.fieryrider.tmdbclone.models.entities.MovieEntity;
+import com.fieryrider.tmdbclone.models.entities.PersonEntity;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
 import com.fieryrider.tmdbclone.repositories.MovieRepository;
@@ -38,10 +38,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<BasicMovieDto> getAll() {
-        List<Movie> movies = this.movieRepository.findAll();
+        List<MovieEntity> movies = this.movieRepository.findAll();
 
         List<BasicMovieDto> basicMovieDtos = new ArrayList<>();
-        for (Movie movie : movies) {
+        for (MovieEntity movie : movies) {
             BasicMovieDto basicMovieDto = this.modelMapper.map(movie, BasicMovieDto.class);
             basicMovieDtos.add(basicMovieDto);
         }
@@ -51,7 +51,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDetailsDto getById(String id) {
-        Movie movie;
+        MovieEntity movie;
         try {
             movie = this.movieRepository.findById(id).orElseThrow();
         } catch (NoSuchElementException ex) {
@@ -64,9 +64,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<BasicMovieDto> getPopular() {
-        List<Movie> movies =  this.movieRepository.getAllByPopularEquals(true);
+        List<MovieEntity> movies =  this.movieRepository.getAllByPopularEquals(true);
         List<BasicMovieDto> basicMovieDtos = new ArrayList<>();
-        for (Movie movie : movies) {
+        for (MovieEntity movie : movies) {
             BasicMovieDto basicMovieDto = this.modelMapper.map(movie, BasicMovieDto.class);
             basicMovieDtos.add(basicMovieDto);
         }
@@ -76,7 +76,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void setPopular(String id, boolean popular) {
-        Movie movie = this.movieRepository.findById(id).orElseThrow();
+        MovieEntity movie = this.movieRepository.findById(id).orElseThrow();
         movie.setPopular(popular);
         this.movieRepository.saveAndFlush(movie);
     }
@@ -84,15 +84,15 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public EntityIdDto add(MovieCreateDto movieCreateDto) {
-        Movie movie = this.modelMapper.map(movieCreateDto, Movie.class);
-        Set<Person> cast = new HashSet<>();
-        Set<Person> producers = new HashSet<>();
-        Set<Person> directors = new HashSet<>();
-        Set<Person> writers = new HashSet<>();
+        MovieEntity movie = this.modelMapper.map(movieCreateDto, MovieEntity.class);
+        Set<PersonEntity> cast = new HashSet<>();
+        Set<PersonEntity> producers = new HashSet<>();
+        Set<PersonEntity> directors = new HashSet<>();
+        Set<PersonEntity> writers = new HashSet<>();
         if (movieCreateDto.getProducers() != null) {
             for (String producerId : movieCreateDto.getProducers()) {
                 try {
-                    Person producer = this.personService.getPersonById(producerId);
+                    PersonEntity producer = this.personService.getPersonById(producerId);
                     producers.add(producer);
                     producer.getProducing().add(movie);
                 } catch (NoSuchElementException ex) {
@@ -102,7 +102,7 @@ public class MovieServiceImpl implements MovieService {
         }
         for (String directorId : movieCreateDto.getDirectors()) {
             try {
-                Person director = this.personService.getPersonById(directorId);
+                PersonEntity director = this.personService.getPersonById(directorId);
                 directors.add(director);
                 director.getDirecting().add(movie);
             } catch (NoSuchElementException ex) {
@@ -111,7 +111,7 @@ public class MovieServiceImpl implements MovieService {
         }
         for (String writerId : movieCreateDto.getWriters()) {
             try {
-                Person writer = this.personService.getPersonById(writerId);
+                PersonEntity writer = this.personService.getPersonById(writerId);
                 writers.add(writer);
                 writer.getWriting().add(movie);
             } catch (NoSuchElementException ex) {
@@ -120,7 +120,7 @@ public class MovieServiceImpl implements MovieService {
         }
         for (String actorId : movieCreateDto.getCast()) {
             try {
-                Person actor = this.personService.getPersonById(actorId);
+                PersonEntity actor = this.personService.getPersonById(actorId);
                 cast.add(actor);
                 actor.getActing().add(movie);
             } catch (NoSuchElementException ex) {
@@ -131,14 +131,14 @@ public class MovieServiceImpl implements MovieService {
         movie.setProducers(producers);
         movie.setDirectors(directors);
         movie.setWriters(writers);
-        Movie saved = this.movieRepository.saveAndFlush(movie);
+        MovieEntity saved = this.movieRepository.saveAndFlush(movie);
         return new EntityIdDto(saved.getId());
     }
 
     @Override
     @Transactional
     public void edit(String id, MovieUpdateDto movieUpdateDto) {
-        Movie movie = this.movieRepository.findById(id).orElseThrow();
+        MovieEntity movie = this.movieRepository.findById(id).orElseThrow();
 
         if (movieUpdateDto.getTitle() != null)
             movie.setTitle(movieUpdateDto.getTitle());
@@ -166,7 +166,7 @@ public class MovieServiceImpl implements MovieService {
             movie.setReleaseDate(movieUpdateDto.getReleaseDate());
 
         if (movieUpdateDto.getProducers() != null) {
-            Set<Person> newProducers = new HashSet<>();
+            Set<PersonEntity> newProducers = new HashSet<>();
             for (String producerId : movieUpdateDto.getProducers()) {
                 try {
                     newProducers.add(this.personService.getPersonById(producerId));
@@ -174,18 +174,18 @@ public class MovieServiceImpl implements MovieService {
                     throw new NoSuchProducerFound();
                 }
             }
-            Set<Person> currentProducers = movie.getProducers();
-            for (Person producer : currentProducers) {
+            Set<PersonEntity> currentProducers = movie.getProducers();
+            for (PersonEntity producer : currentProducers) {
                 if (!newProducers.contains(producer))
                     producer.getProducing().remove(movie);
             }
             currentProducers.removeIf(producer -> !newProducers.contains(producer));
             currentProducers.addAll(newProducers);
-            for (Person producer : currentProducers)
+            for (PersonEntity producer : currentProducers)
                 producer.getProducing().add(movie);
         }
         if (movieUpdateDto.getDirectors() != null) {
-            Set<Person> newDirectors = new HashSet<>();
+            Set<PersonEntity> newDirectors = new HashSet<>();
             for (String directorId : movieUpdateDto.getDirectors()) {
                 try {
                     newDirectors.add(this.personService.getPersonById(directorId));
@@ -193,18 +193,18 @@ public class MovieServiceImpl implements MovieService {
                     throw new NoSuchDirectorFound();
                 }
             }
-            Set<Person> currentDirectors = movie.getDirectors();
-            for (Person director : currentDirectors) {
+            Set<PersonEntity> currentDirectors = movie.getDirectors();
+            for (PersonEntity director : currentDirectors) {
                 if (!newDirectors.contains(director))
                     director.getDirecting().remove(movie);
             }
             currentDirectors.removeIf(director -> !newDirectors.contains(director));
             currentDirectors.addAll(newDirectors);
-            for (Person director : currentDirectors)
+            for (PersonEntity director : currentDirectors)
                 director.getDirecting().add(movie);
         }
         if (movieUpdateDto.getWriters() != null) {
-            Set<Person> newWriters = new HashSet<>();
+            Set<PersonEntity> newWriters = new HashSet<>();
             for (String writerId : movieUpdateDto.getWriters()) {
                 try {
                     newWriters.add(this.personService.getPersonById(writerId));
@@ -212,18 +212,18 @@ public class MovieServiceImpl implements MovieService {
                     throw new NoSuchWriterFound();
                 }
             }
-            Set<Person> currentWriters = movie.getWriters();
-            for (Person writer : currentWriters) {
+            Set<PersonEntity> currentWriters = movie.getWriters();
+            for (PersonEntity writer : currentWriters) {
                 if (!newWriters.contains(writer))
                     writer.getWriting().remove(movie);
             }
             currentWriters.removeIf(writer -> !newWriters.contains(writer));
             currentWriters.addAll(newWriters);
-            for (Person writer : currentWriters)
+            for (PersonEntity writer : currentWriters)
                 writer.getWriting().add(movie);
         }
         if (movieUpdateDto.getCast() != null) {
-            Set<Person> newCast = new HashSet<>();
+            Set<PersonEntity> newCast = new HashSet<>();
             for (String actorId : movieUpdateDto.getCast()) {
                 try {
                     newCast.add(this.personService.getPersonById(actorId));
@@ -231,18 +231,18 @@ public class MovieServiceImpl implements MovieService {
                     throw new NoSuchCastFound();
                 }
             }
-            Set<Person> currentCast = movie.getCast();
-            for (Person actor : currentCast) {
+            Set<PersonEntity> currentCast = movie.getCast();
+            for (PersonEntity actor : currentCast) {
                 if (!newCast.contains(actor))
                     actor.getActing().remove(movie);
             }
             currentCast.removeIf(actor -> !newCast.contains(actor));
             currentCast.addAll(newCast);
-            for (Person actor : currentCast)
+            for (PersonEntity actor : currentCast)
                 actor.getActing().add(movie);
         }
         if (movieUpdateDto.getCharacters() !=  null) {
-            Set<Character> newCharacters = new HashSet<>();
+            Set<CharacterEntity> newCharacters = new HashSet<>();
             for (String characterId : movieUpdateDto.getCharacters()) {
                 try {
                     newCharacters.add(this.characterService.getCharacterById(characterId));
@@ -251,14 +251,14 @@ public class MovieServiceImpl implements MovieService {
                 }
             }
 
-            Set<Character> currentCharacters = movie.getCharacters();
-            for (Character character : currentCharacters) {
+            Set<CharacterEntity> currentCharacters = movie.getCharacters();
+            for (CharacterEntity character : currentCharacters) {
                 if (!newCharacters.contains(character))
                     character.getFrom().remove(movie);
             }
             currentCharacters.removeIf(character -> !newCharacters.contains(character));
             currentCharacters.addAll(newCharacters);
-            for (Character character : currentCharacters)
+            for (CharacterEntity character : currentCharacters)
                 character.getFrom().add(movie);
         }
 
@@ -268,16 +268,16 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public void deleteById(String id) {
-        Movie movie = this.movieRepository.findById(id).orElseThrow();
-        for (Person producer : movie.getProducers())
+        MovieEntity movie = this.movieRepository.findById(id).orElseThrow();
+        for (PersonEntity producer : movie.getProducers())
             producer.getProducing().remove(movie);
-        for (Person writer : movie.getWriters())
+        for (PersonEntity writer : movie.getWriters())
             writer.getWriting().remove(movie);
-        for (Person director : movie.getDirectors())
+        for (PersonEntity director : movie.getDirectors())
             director.getDirecting().remove(movie);
-        for (Person actor : movie.getCast())
+        for (PersonEntity actor : movie.getCast())
             actor.getActing().remove(movie);
-        for (Character character : movie.getCharacters())
+        for (CharacterEntity character : movie.getCharacters())
             character.getFrom().remove(movie);
 
         this.movieRepository.deleteById(id);

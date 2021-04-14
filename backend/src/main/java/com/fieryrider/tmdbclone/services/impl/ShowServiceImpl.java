@@ -1,7 +1,7 @@
 package com.fieryrider.tmdbclone.services.impl;
 
-import com.fieryrider.tmdbclone.models.entities.Character;
-import com.fieryrider.tmdbclone.models.entities.Show;
+import com.fieryrider.tmdbclone.models.entities.CharacterEntity;
+import com.fieryrider.tmdbclone.models.entities.ShowEntity;
 import com.fieryrider.tmdbclone.repositories.ShowRepository;
 import com.fieryrider.tmdbclone.services.ShowService;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,14 @@ public class ShowServiceImpl implements ShowService {
     }
 
     @Override
-    public Show getShow(String id) {
+    public ShowEntity getShow(String id) {
         return this.showRepository.findById(id).orElseThrow();
     }
 
     @Override
     @Transactional
-    public void removeCharacterFromShow(String showId, Character character) {
-        Show show = this.showRepository.findById(showId).orElseThrow();
+    public void removeCharacterFromShow(String showId, CharacterEntity character) {
+        ShowEntity show = this.showRepository.findById(showId).orElseThrow();
         show.getCharacters().remove(character);
         this.showRepository.saveAndFlush(show);
     }

@@ -1,10 +1,10 @@
 package com.fieryrider.tmdbclone.services;
 
-import com.fieryrider.tmdbclone.models.entities.Character;
-import com.fieryrider.tmdbclone.models.entities.Show;
+import com.fieryrider.tmdbclone.models.entities.CharacterEntity;
+import com.fieryrider.tmdbclone.models.entities.ShowEntity;
 
 public interface ShowService {
-    Show getShow(String id);
+    ShowEntity getShow(String id);
 
-    void removeCharacterFromShow(String showId, Character character);
+    void removeCharacterFromShow(String showId, CharacterEntity character);
 }
