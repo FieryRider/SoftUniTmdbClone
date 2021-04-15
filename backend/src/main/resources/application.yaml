@@ -1,3 +1,8 @@
+application:
+  jwt:
+    secretKey: ",:S:5s[>I]{`)UY-G^5cL%fttbM7:YVIX4>#Ng~dF5SG<D^3L?7"
+    tokenPrefix: "Bearer "
+    tokenExpirationHours: 1
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -10,7 +15,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     open-in-view: false
   mvc:
     hiddenmethod:
