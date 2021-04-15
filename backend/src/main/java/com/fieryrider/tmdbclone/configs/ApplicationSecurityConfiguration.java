@@ -57,6 +57,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .antMatchers(HttpMethod.GET, "/movies/**", "/tv-shows/**", "/people/**", "/characters/**", "/genres/**").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/movies/**", "/tv-shows/**", "/people/**", "/characters/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/movies/**", "/tv-shows/**", "/people/**", "/characters/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/statistics/**").permitAll()
                 .anyRequest().authenticated()
                 .and().httpBasic();
     }

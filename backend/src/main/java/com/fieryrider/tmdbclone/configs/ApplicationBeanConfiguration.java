@@ -1,6 +1,8 @@
 package com.fieryrider.tmdbclone.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fieryrider.tmdbclone.interceptors.CreateMovieInterceptor;
+import com.fieryrider.tmdbclone.interceptors.ResponseStatusInterceptor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,5 +22,13 @@ public class ApplicationBeanConfiguration {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+    @Bean
+    public CreateMovieInterceptor createMovieInterceptor() {
+        return new CreateMovieInterceptor();
+    }
+    @Bean
+    ResponseStatusInterceptor responseStatusInterceptor() {
+        return new ResponseStatusInterceptor();
     }
 }
