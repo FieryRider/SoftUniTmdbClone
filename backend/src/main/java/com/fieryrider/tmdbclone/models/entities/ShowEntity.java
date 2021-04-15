@@ -77,7 +77,6 @@ public abstract class ShowEntity extends BaseEntity {
         this.releaseYear = releaseYear;
     }
 
-
     public String getPosterUrl() {
         return this.posterUrl;
     }

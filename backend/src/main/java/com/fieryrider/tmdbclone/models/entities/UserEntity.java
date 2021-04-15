@@ -8,12 +8,33 @@ import java.util.Set;
 public class UserEntity extends BaseEntity {
     @Column(nullable = false, unique = true, updatable = false)
     private String username;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<UserRoleEntity> roles;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "favourite_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "show_id"))
+    private Set<MovieEntity> favouriteMovies;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "favourite_tvshows",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "show_id"))
+    private Set<TvShowEntity> favouriteTvShows;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "favourite_people",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private Set<PersonEntity> favouritePeople;
 
     public String getUsername() {
         return this.username;
@@ -45,6 +66,30 @@ public class UserEntity extends BaseEntity {
 
     public void setRoles(Set<UserRoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public Set<MovieEntity> getFavouriteMovies() {
+        return this.favouriteMovies;
+    }
+
+    public void setFavouriteMovies(Set<MovieEntity> favouriteMovies) {
+        this.favouriteMovies = favouriteMovies;
+    }
+
+    public Set<TvShowEntity> getFavouriteTvShows() {
+        return this.favouriteTvShows;
+    }
+
+    public void setFavouriteTvShows(Set<TvShowEntity> favouriteTvShows) {
+        this.favouriteTvShows = favouriteTvShows;
+    }
+
+    public Set<PersonEntity> getFavouritePeople() {
+        return this.favouritePeople;
+    }
+
+    public void setFavouritePeople(Set<PersonEntity> favouritePeople) {
+        this.favouritePeople = favouritePeople;
     }
 
     public UserEntity() {

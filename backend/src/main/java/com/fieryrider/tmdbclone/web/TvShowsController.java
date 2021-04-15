@@ -7,6 +7,7 @@ import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.services.TvShowService;
+import com.fieryrider.tmdbclone.services.UserService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,9 +23,11 @@ import java.util.NoSuchElementException;
 @RequestMapping("/tv-shows")
 public class TvShowsController {
     private final TvShowService tvShowService;
+    private final UserService userService;
 
-    public TvShowsController(TvShowService tvShowService) {
+    public TvShowsController(TvShowService tvShowService, UserService userService) {
         this.tvShowService = tvShowService;
+        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -34,6 +38,11 @@ public class TvShowsController {
     @GetMapping("/popular")
     public List<BasicTvShowDto> getPopular() {
         return this.tvShowService.getPopular();
+    }
+
+    @GetMapping("/favourite")
+    public List<BasicTvShowDto> getFavourite(Principal principal) {
+        return this.userService.getFavouriteTvShows(principal);
     }
 
     @GetMapping("/{id}")
@@ -62,6 +71,16 @@ public class TvShowsController {
             this.tvShowService.setPopular(id, true);
             return ResponseEntity.ok().build();
         } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/favourite/{id}")
+    public ResponseEntity<Void> addToFavourite(@PathVariable String id, Principal principal) {
+        try {
+            this.userService.addFavouriteTvShow(id, principal);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
         }
     }

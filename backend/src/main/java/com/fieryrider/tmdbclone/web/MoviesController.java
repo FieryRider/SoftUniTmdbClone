@@ -2,11 +2,12 @@ package com.fieryrider.tmdbclone.web;
 
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.BasicMovieDto;
-import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.MovieDetailsDto;
+import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.MovieUpdateDto;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.services.MovieService;
+import com.fieryrider.tmdbclone.services.UserService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,9 +24,11 @@ import java.util.NoSuchElementException;
 @RequestMapping("/movies")
 public class MoviesController {
     private final MovieService movieService;
+    private final UserService userService;
 
-    public MoviesController(MovieService movieService) {
+    public MoviesController(MovieService movieService, UserService userService) {
         this.movieService = movieService;
+        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -35,6 +39,11 @@ public class MoviesController {
     @GetMapping("/popular")
     public List<BasicMovieDto> getPopular() {
         return this.movieService.getPopular();
+    }
+
+    @GetMapping("/favourite")
+    public List<BasicMovieDto> getFavourite(Principal principal) {
+        return this.userService.getFavouriteMovies(principal);
     }
 
     @GetMapping("/{id}")
@@ -64,6 +73,16 @@ public class MoviesController {
             this.movieService.setPopular(id, true);
             return ResponseEntity.ok().build();
         } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/favourite/{id}")
+    public ResponseEntity<Void> addToFavourite(@PathVariable String id, Principal principal) {
+        try {
+            this.userService.addFavouriteMovie(id, principal);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
         }
     }

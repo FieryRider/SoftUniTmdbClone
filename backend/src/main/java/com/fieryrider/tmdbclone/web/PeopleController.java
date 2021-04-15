@@ -2,11 +2,12 @@ package com.fieryrider.tmdbclone.web;
 
 import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
-import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
+import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.services.PersonService;
+import com.fieryrider.tmdbclone.services.UserService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,9 +24,11 @@ import java.util.NoSuchElementException;
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonService personService;
+    private final UserService userService;
 
-    public PeopleController(PersonService personService) {
+    public PeopleController(PersonService personService, UserService userService) {
         this.personService = personService;
+        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -35,6 +39,11 @@ public class PeopleController {
     @GetMapping("/popular")
     public List<BasicPersonDto> getPopular() {
         return this.personService.getPopular();
+    }
+
+    @GetMapping("/favourite")
+    public List<BasicPersonDto> getFavourite(Principal principal) {
+        return this.userService.getFavouritePeople(principal);
     }
 
     @GetMapping("/{id}")
@@ -60,6 +69,16 @@ public class PeopleController {
             this.personService.setPopular(id, true);
             return ResponseEntity.ok().build();
         } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/favourite/{id}")
+    public ResponseEntity<Void> addToFavourite(@PathVariable String id, Principal principal) {
+        try {
+            this.userService.addFavouritePerson(id, principal);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
         }
     }
