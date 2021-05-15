@@ -1,8 +1,7 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
-import com.fieryrider.tmdbclone.models.dtos.property_dtos.MovieCastDto;
-import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowCrewDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowPersonDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
@@ -32,9 +31,9 @@ public class TvShowDetailsDto {
 
     private Set<Genre> genres;
 
-    private Set<MovieCastDto> cast;
+    private Set<ShowPersonDto> cast;
 
-    private Set<ShowCrewDto> creators;
+    private Set<ShowPersonDto> creators;
 
     private Set<CharacterPropertyDto> characters;
 
@@ -126,19 +125,19 @@ public class TvShowDetailsDto {
         this.genres = genres;
     }
 
-    public Set<MovieCastDto> getCast() {
+    public Set<ShowPersonDto> getCast() {
         return this.cast;
     }
 
-    public void setCast(Set<MovieCastDto> cast) {
+    public void setCast(Set<ShowPersonDto> cast) {
         this.cast = cast;
     }
 
-    public Set<ShowCrewDto> getCreators() {
+    public Set<ShowPersonDto> getCreators() {
         return this.creators;
     }
 
-    public void setCreators(Set<ShowCrewDto> creators) {
+    public void setCreators(Set<ShowPersonDto> creators) {
         this.creators = creators;
     }
 

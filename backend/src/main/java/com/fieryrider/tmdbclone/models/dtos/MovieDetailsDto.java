@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
-import com.fieryrider.tmdbclone.models.dtos.property_dtos.MovieCastDto;
-import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowCrewDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowPersonDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,13 +27,13 @@ public class MovieDetailsDto {
 
     private Set<Genre> genres;
 
-    private Set<MovieCastDto> cast;
+    private Set<ShowPersonDto> cast;
 
-    private Set<ShowCrewDto> producers;
+    private Set<ShowPersonDto> producers;
 
-    private Set<ShowCrewDto> directors;
+    private Set<ShowPersonDto> directors;
 
-    private Set<ShowCrewDto> writers;
+    private Set<ShowPersonDto> writers;
 
     private MovieStatus status;
 
@@ -104,35 +103,35 @@ public class MovieDetailsDto {
         this.genres = genres;
     }
 
-    public Set<MovieCastDto> getCast() {
+    public Set<ShowPersonDto> getCast() {
         return this.cast;
     }
 
-    public void setCast(Set<MovieCastDto> cast) {
+    public void setCast(Set<ShowPersonDto> cast) {
         this.cast = cast;
     }
 
-    public Set<ShowCrewDto> getProducers() {
+    public Set<ShowPersonDto> getProducers() {
         return this.producers;
     }
 
-    public void setProducers(Set<ShowCrewDto> producers) {
+    public void setProducers(Set<ShowPersonDto> producers) {
         this.producers = producers;
     }
 
-    public Set<ShowCrewDto> getDirectors() {
+    public Set<ShowPersonDto> getDirectors() {
         return this.directors;
     }
 
-    public void setDirectors(Set<ShowCrewDto> directors) {
+    public void setDirectors(Set<ShowPersonDto> directors) {
         this.directors = directors;
     }
 
-    public Set<ShowCrewDto> getWriters() {
+    public Set<ShowPersonDto> getWriters() {
         return this.writers;
     }
 
-    public void setWriters(Set<ShowCrewDto> writers) {
+    public void setWriters(Set<ShowPersonDto> writers) {
         this.writers = writers;
     }
 

@@ -2,11 +2,11 @@ package com.fieryrider.tmdbclone.models.dtos.property_dtos;
 
 import java.util.Set;
 
-public class MovieCastDto {
+public class ShowPersonDto {
     private String id;
     private String name;
     private String profilePictureUrl;
-    private Set<String> characters;
+    private Set<CharacterPropertyDto> playing;
 
     public String getId() {
         return this.id;
@@ -32,14 +32,14 @@ public class MovieCastDto {
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    public Set<String> getCharacters() {
-        return this.characters;
+    public Set<CharacterPropertyDto> getPlaying() {
+        return this.playing;
     }
 
-    public void setCharacters(Set<String> characters) {
-        this.characters = characters;
+    public void setPlaying(Set<CharacterPropertyDto> playing) {
+        this.playing = playing;
     }
 
-    public MovieCastDto() {
+    public ShowPersonDto() {
     }
 }
