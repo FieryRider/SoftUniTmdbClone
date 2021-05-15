@@ -26,6 +26,8 @@ public class TvShowDetailsDto {
 
     private TvShowStatus status;
 
+    private int releaseYear;
+
     private String network;
 
     private Set<Genre> genres;
@@ -98,6 +100,14 @@ public class TvShowDetailsDto {
 
     public void setStatus(TvShowStatus status) {
         this.status = status;
+    }
+
+    public int getReleaseYear() {
+        return this.releaseYear;
+    }
+
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
     public String getNetwork() {

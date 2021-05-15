@@ -35,6 +35,8 @@ public class TvShowUpdateDto {
     @EnumNameValid(enumClass = TvShowStatus.class, message = "Status must be one of the predefined")
     private String status;
 
+    private Integer releaseYear;
+
     @NullOrNotBlank(message = "Network cannot be empty")
     private String network;
 
@@ -118,6 +120,14 @@ public class TvShowUpdateDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getReleaseYear() {
+        return this.releaseYear;
+    }
+
+    public void setReleaseYear(Integer releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
     public String getNetwork() {
