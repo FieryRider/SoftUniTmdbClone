@@ -13,6 +13,8 @@ public class BasicTvShowDto {
 
     private LocalDate releaseDate;
 
+    private boolean popular;
+
     public String getId() {
         return this.id;
     }
@@ -51,6 +53,14 @@ public class BasicTvShowDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public boolean isPopular() {
+        return this.popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
     }
 
     public BasicTvShowDto() {

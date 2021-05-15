@@ -9,6 +9,8 @@ public class BasicPersonDto {
 
     private List<String> knownFor;
 
+    private boolean popular;
+
     public String getId() {
         return this.id;
     }
@@ -31,6 +33,14 @@ public class BasicPersonDto {
 
     public void setKnownFor(List<String> knownFor) {
         this.knownFor = knownFor;
+    }
+
+    public boolean isPopular() {
+        return this.popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
     }
 
     public BasicPersonDto() {

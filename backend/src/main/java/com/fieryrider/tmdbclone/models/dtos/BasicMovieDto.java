@@ -19,6 +19,8 @@ public class BasicMovieDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T00:00:00.000Z'")
     private LocalDate releaseDate;
 
+    private boolean popular;
+
     public String getId() {
         return this.id;
     }
@@ -57,6 +59,14 @@ public class BasicMovieDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public boolean isPopular() {
+        return this.popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
     }
 
     public BasicMovieDto() {

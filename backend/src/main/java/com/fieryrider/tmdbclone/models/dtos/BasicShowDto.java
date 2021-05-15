@@ -9,6 +9,8 @@ public class BasicShowDto {
 
     private String posterUrl;
 
+    private boolean popular;
+
     public String getId() {
         return this.id;
     }
@@ -39,6 +41,14 @@ public class BasicShowDto {
 
     public void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
+    }
+
+    public boolean isPopular() {
+        return this.popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
     }
 
     public BasicShowDto() {
