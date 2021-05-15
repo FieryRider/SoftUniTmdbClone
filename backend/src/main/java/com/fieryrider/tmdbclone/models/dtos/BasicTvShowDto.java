@@ -1,7 +1,5 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
-import java.time.LocalDate;
-
 public class BasicTvShowDto {
     private String id;
 
@@ -11,7 +9,7 @@ public class BasicTvShowDto {
 
     private String posterUrl;
 
-    private LocalDate releaseDate;
+    private int releaseYear;
 
     private boolean popular;
 
@@ -47,12 +45,12 @@ public class BasicTvShowDto {
         this.posterUrl = posterUrl;
     }
 
-    public LocalDate getReleaseDate() {
-        return this.releaseDate;
+    public int getReleaseYear() {
+        return this.releaseYear;
     }
 
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
     public boolean isPopular() {
