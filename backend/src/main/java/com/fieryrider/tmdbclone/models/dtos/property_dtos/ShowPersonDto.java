@@ -6,7 +6,6 @@ public class ShowPersonDto {
     private String id;
     private String name;
     private String profilePictureUrl;
-    private Set<CharacterPropertyDto> playing;
 
     public String getId() {
         return this.id;
@@ -30,14 +29,6 @@ public class ShowPersonDto {
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
-    }
-
-    public Set<CharacterPropertyDto> getPlaying() {
-        return this.playing;
-    }
-
-    public void setPlaying(Set<CharacterPropertyDto> playing) {
-        this.playing = playing;
     }
 
     public ShowPersonDto() {

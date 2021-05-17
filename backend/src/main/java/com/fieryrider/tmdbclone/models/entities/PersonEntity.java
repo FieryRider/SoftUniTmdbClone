@@ -41,11 +41,6 @@ public class PersonEntity extends BaseEntity {
     private Set<MovieEntity> directing;
     @ManyToMany(mappedBy = "creators", fetch = FetchType.EAGER)
     private Set<TvShowEntity> creating;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(name = "people_characters",
-            joinColumns = @JoinColumn(name = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "character_id"))
-    private Set<CharacterEntity> playing;
 
     private boolean popular;
 
@@ -159,14 +154,6 @@ public class PersonEntity extends BaseEntity {
 
     public void setCreating(Set<TvShowEntity> creating) {
         this.creating = creating;
-    }
-
-    public Set<CharacterEntity> getPlaying() {
-        return this.playing;
-    }
-
-    public void setPlaying(Set<CharacterEntity> playing) {
-        this.playing = playing;
     }
 
     public boolean isPopular() {

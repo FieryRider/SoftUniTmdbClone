@@ -37,12 +37,6 @@ public abstract class ShowEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id"))
     private Set<PersonEntity> cast;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(name = "shows_characters",
-            joinColumns = @JoinColumn(name = "show_id"),
-            inverseJoinColumns = @JoinColumn(name = "character_id"))
-    private Set<CharacterEntity> characters;
-
     private boolean popular;
 
     public String getTitle() {
@@ -107,14 +101,6 @@ public abstract class ShowEntity extends BaseEntity {
 
     public void setCast(Set<PersonEntity> cast) {
         this.cast = cast;
-    }
-
-    public Set<CharacterEntity> getCharacters() {
-        return this.characters;
-    }
-
-    public void setCharacters(Set<CharacterEntity> characters) {
-        this.characters = characters;
     }
 
     public boolean isPopular() {

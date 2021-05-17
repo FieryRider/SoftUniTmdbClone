@@ -40,8 +40,6 @@ public class TvShowUpdateDto {
     @NullOrNotBlank(message = "Network cannot be empty")
     private String network;
 
-    private Set<String> characters;
-
     public String getTitle() {
         return this.title;
     }
@@ -136,14 +134,6 @@ public class TvShowUpdateDto {
 
     public void setNetwork(String network) {
         this.network = network;
-    }
-
-    public Set<String> getCharacters() {
-        return this.characters;
-    }
-
-    public void setCharacters(Set<String> characters) {
-        this.characters = characters;
     }
 
     public TvShowUpdateDto() {

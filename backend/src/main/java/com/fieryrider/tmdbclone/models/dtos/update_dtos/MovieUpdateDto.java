@@ -51,8 +51,6 @@ public class MovieUpdateDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate releaseDate;
 
-    private Set<String> characters;
-
     public String getTitle() {
         return this.title;
     }
@@ -163,14 +161,6 @@ public class MovieUpdateDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
-    }
-
-    public Set<String> getCharacters() {
-        return this.characters;
-    }
-
-    public void setCharacters(Set<String> characters) {
-        this.characters = characters;
     }
 
     public MovieUpdateDto() {

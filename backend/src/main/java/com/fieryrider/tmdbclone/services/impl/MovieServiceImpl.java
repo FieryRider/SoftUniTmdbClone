@@ -6,13 +6,11 @@ import com.fieryrider.tmdbclone.models.dtos.MovieDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.MovieUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
-import com.fieryrider.tmdbclone.models.entities.CharacterEntity;
 import com.fieryrider.tmdbclone.models.entities.MovieEntity;
 import com.fieryrider.tmdbclone.models.entities.PersonEntity;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
 import com.fieryrider.tmdbclone.repositories.MovieRepository;
-import com.fieryrider.tmdbclone.services.CharacterService;
 import com.fieryrider.tmdbclone.services.MovieService;
 import com.fieryrider.tmdbclone.services.PersonService;
 import org.modelmapper.ModelMapper;
@@ -25,14 +23,12 @@ import java.util.*;
 public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final PersonService personService;
-    private final CharacterService characterService;
     private final ModelMapper modelMapper;
 
-    public MovieServiceImpl(MovieRepository movieRepository, PersonService personService, CharacterService characterService, ModelMapper modelMapper) {
+    public MovieServiceImpl(MovieRepository movieRepository, PersonService personService, ModelMapper modelMapper) {
         super();
         this.movieRepository = movieRepository;
         this.personService = personService;
-        this.characterService = characterService;
         this.modelMapper = modelMapper;
     }
 
@@ -241,26 +237,6 @@ public class MovieServiceImpl implements MovieService {
             for (PersonEntity actor : currentCast)
                 actor.getActing().add(movie);
         }
-        if (movieUpdateDto.getCharacters() !=  null) {
-            Set<CharacterEntity> newCharacters = new HashSet<>();
-            for (String characterId : movieUpdateDto.getCharacters()) {
-                try {
-                    newCharacters.add(this.characterService.getCharacterById(characterId));
-                } catch (NoSuchElementException ex) {
-                    throw new NoSuchCharacterFound();
-                }
-            }
-
-            Set<CharacterEntity> currentCharacters = movie.getCharacters();
-            for (CharacterEntity character : currentCharacters) {
-                if (!newCharacters.contains(character))
-                    character.getFrom().remove(movie);
-            }
-            currentCharacters.removeIf(character -> !newCharacters.contains(character));
-            currentCharacters.addAll(newCharacters);
-            for (CharacterEntity character : currentCharacters)
-                character.getFrom().add(movie);
-        }
 
         this.movieRepository.saveAndFlush(movie);
     }
@@ -277,8 +253,6 @@ public class MovieServiceImpl implements MovieService {
             director.getDirecting().remove(movie);
         for (PersonEntity actor : movie.getCast())
             actor.getActing().remove(movie);
-        for (CharacterEntity character : movie.getCharacters())
-            character.getFrom().remove(movie);
 
         this.movieRepository.deleteById(id);
     }

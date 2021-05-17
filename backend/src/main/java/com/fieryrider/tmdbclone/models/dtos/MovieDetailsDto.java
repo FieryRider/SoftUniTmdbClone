@@ -3,7 +3,6 @@ package com.fieryrider.tmdbclone.models.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowPersonDto;
 
@@ -43,8 +42,6 @@ public class MovieDetailsDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T00:00:00.000Z'")
     private LocalDate releaseDate;
-
-    private Set<CharacterPropertyDto> characters;
 
     public String getId() {
         return this.id;
@@ -164,14 +161,6 @@ public class MovieDetailsDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
-    }
-
-    public Set<CharacterPropertyDto> getCharacters() {
-        return this.characters;
-    }
-
-    public void setCharacters(Set<CharacterPropertyDto> characters) {
-        this.characters = characters;
     }
 
     public MovieDetailsDto() {
