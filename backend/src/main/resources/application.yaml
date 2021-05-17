@@ -26,9 +26,9 @@ logging:
     org:
       root: WARN
       hibernate:
-        SQL: DEBUG
+        SQL: WARN
         type:
-          descriptor: TRACE
+          descriptor: WARN
     blog: WARN
 #server:
 #  port: 8000
