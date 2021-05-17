@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.util.Objects;
 
 @MappedSuperclass
 public abstract class BaseEntity {
@@ -22,5 +23,17 @@ public abstract class BaseEntity {
     }
 
     public BaseEntity() {
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BaseEntity))
+            return false;
+        return this.hashCode() == obj.hashCode();
     }
 }
