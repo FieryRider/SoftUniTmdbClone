@@ -1,10 +1,8 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowPersonDto;
-import com.fieryrider.tmdbclone.models.entities.enums.Genre;
-import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
-import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
 
 import java.util.Set;
 
@@ -21,15 +19,15 @@ public class TvShowDetailsDto {
 
     private String officialLanguage;
 
-    private TvShowType type;
+    private EnumDto type;
 
-    private TvShowStatus status;
+    private EnumDto status;
 
     private int releaseYear;
 
     private String network;
 
-    private Set<Genre> genres;
+    private Set<EnumDto> genres;
 
     private Set<ShowPersonDto> cast;
 
@@ -85,19 +83,19 @@ public class TvShowDetailsDto {
         this.officialLanguage = officialLanguage;
     }
 
-    public TvShowType getType() {
+    public EnumDto getType() {
         return this.type;
     }
 
-    public void setType(TvShowType type) {
+    public void setType(EnumDto type) {
         this.type = type;
     }
 
-    public TvShowStatus getStatus() {
+    public EnumDto getStatus() {
         return this.status;
     }
 
-    public void setStatus(TvShowStatus status) {
+    public void setStatus(EnumDto status) {
         this.status = status;
     }
 
@@ -117,11 +115,11 @@ public class TvShowDetailsDto {
         this.network = network;
     }
 
-    public Set<Genre> getGenres() {
+    public Set<EnumDto> getGenres() {
         return this.genres;
     }
 
-    public void setGenres(Set<Genre> genres) {
+    public void setGenres(Set<EnumDto> genres) {
         this.genres = genres;
     }
 

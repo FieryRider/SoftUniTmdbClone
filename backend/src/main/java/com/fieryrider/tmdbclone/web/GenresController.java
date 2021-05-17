@@ -3,7 +3,7 @@ package com.fieryrider.tmdbclone.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fieryrider.tmdbclone.models.dtos.utility_dtos.GenreListDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,10 +26,10 @@ public class GenresController {
 
     @GetMapping
     public ResponseEntity<String> getAll() {
-        List<GenreListDto> genreListDtos = new ArrayList<>();
+        List<EnumDto> genreEnumDtos = new ArrayList<>();
         for (Genre value : Genre.values())
-            genreListDtos.add(new GenreListDto(value.name(), value.getDisplayName()));
-        JsonNode jsonNode = this.objectMapper.valueToTree(genreListDtos);
+            genreEnumDtos.add(new EnumDto(value.name(), value.getDisplayName()));
+        JsonNode jsonNode = this.objectMapper.valueToTree(genreEnumDtos);
         try {
             String retVal = objectMapper.writer().writeValueAsString(jsonNode);
             return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(retVal);

@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonKnownForDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonShowDto;
-import com.fieryrider.tmdbclone.models.entities.enums.Gender;
-import com.fieryrider.tmdbclone.models.entities.enums.PersonRole;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -29,9 +28,9 @@ public class PersonDetailsDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T00:00:00.000Z'")
     private LocalDate birthDate;
 
-    private Gender gender;
+    private EnumDto gender;
 
-    private PersonRole mainRole;
+    private EnumDto mainRole;
 
     private int knownCredits;
 
@@ -103,19 +102,19 @@ public class PersonDetailsDto {
         this.birthDate = birthDate;
     }
 
-    public Gender getGender() {
+    public EnumDto getGender() {
         return this.gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(EnumDto gender) {
         this.gender = gender;
     }
 
-    public PersonRole getMainRole() {
+    public EnumDto getMainRole() {
         return this.mainRole;
     }
 
-    public void setMainRole(PersonRole mainRole) {
+    public void setMainRole(EnumDto mainRole) {
         this.mainRole = mainRole;
     }
 

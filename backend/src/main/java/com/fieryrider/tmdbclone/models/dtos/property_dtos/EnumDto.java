@@ -1,6 +1,6 @@
-package com.fieryrider.tmdbclone.models.dtos.utility_dtos;
+package com.fieryrider.tmdbclone.models.dtos.property_dtos;
 
-public class GenreListDto {
+public class EnumDto {
     private String name;
     private String displayName;
 
@@ -20,10 +20,10 @@ public class GenreListDto {
         this.displayName = displayName;
     }
 
-    public GenreListDto() {
+    public EnumDto() {
     }
 
-    public GenreListDto(String name, String displayName) {
+    public EnumDto(String name, String displayName) {
         this.name = name;
         this.displayName = displayName;
     }

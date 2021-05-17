@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.CharacterPropertyDto;
-import com.fieryrider.tmdbclone.models.entities.enums.Genre;
-import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowPersonDto;
 
 import java.math.BigDecimal;
@@ -25,7 +24,7 @@ public class MovieDetailsDto {
 
     private String officialLanguage;
 
-    private Set<Genre> genres;
+    private Set<EnumDto> genres;
 
     private Set<ShowPersonDto> cast;
 
@@ -35,7 +34,7 @@ public class MovieDetailsDto {
 
     private Set<ShowPersonDto> writers;
 
-    private MovieStatus status;
+    private EnumDto status;
 
     private BigDecimal budget;
 
@@ -95,11 +94,11 @@ public class MovieDetailsDto {
         this.officialLanguage = officialLanguage;
     }
 
-    public Set<Genre> getGenres() {
+    public Set<EnumDto> getGenres() {
         return this.genres;
     }
 
-    public void setGenres(Set<Genre> genres) {
+    public void setGenres(Set<EnumDto> genres) {
         this.genres = genres;
     }
 
@@ -135,11 +134,11 @@ public class MovieDetailsDto {
         this.writers = writers;
     }
 
-    public MovieStatus getStatus() {
+    public EnumDto getStatus() {
         return this.status;
     }
 
-    public void setStatus(MovieStatus status) {
+    public void setStatus(EnumDto status) {
         this.status = status;
     }
 
