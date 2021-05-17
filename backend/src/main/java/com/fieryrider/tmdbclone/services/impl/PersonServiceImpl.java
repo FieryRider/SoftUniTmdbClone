@@ -22,6 +22,9 @@ import java.util.stream.Collectors;
 @Service
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
+    private ShowService showService;
+    private MovieService movieService;
+    private TvShowService tvShowService;
     private final ModelMapper modelMapper;
 
     public PersonServiceImpl(PersonRepository personRepository, ModelMapper modelMapper) {
@@ -29,6 +32,18 @@ public class PersonServiceImpl implements PersonService {
         this.modelMapper = modelMapper;
     }
 
+    @Autowired
+    public void setShowService(ShowService showService) {
+        this.showService = showService;
+    }
+    @Autowired
+    public void setMovieService(MovieService movieService) {
+        this.movieService = movieService;
+    }
+    @Autowired
+    public void setTvShowService(TvShowService tvShowService) {
+        this.tvShowService = tvShowService;
+    }
 
     @Override
     public PersonEntity getPersonById(String id) {
@@ -120,15 +135,14 @@ public class PersonServiceImpl implements PersonService {
         PersonEntity person = this.personRepository.findById(id).orElseThrow();
 
         for (ShowEntity show : person.getActing())
-            show.getCast().remove(person);
-        for (MovieEntity movie : person.getWriting())
-            movie.getWriters().remove(person);
-        for (MovieEntity movie : person.getProducing())
-            movie.getProducers().remove(person);
-        for (MovieEntity movie : person.getDirecting())
-            movie.getDirectors().remove(person);
+            this.showService.removePersonFromShow(show.getId(), person);
+        Set<MovieEntity> movies = person.getWriting();
+        movies.addAll(person.getProducing());
+        movies.addAll(person.getDirecting());
+        for (MovieEntity movie : movies)
+            this.movieService.removePersonFromMovie(movie.getId(), person);
         for (TvShowEntity tvShow : person.getCreating())
-            tvShow.getCreators().remove(person);
+            this.tvShowService.removePersonFromTvShow(tvShow.getId(), person);
 
         this.personRepository.delete(person);
     }

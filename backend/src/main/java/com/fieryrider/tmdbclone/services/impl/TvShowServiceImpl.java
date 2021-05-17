@@ -192,4 +192,12 @@ public class TvShowServiceImpl implements TvShowService {
 
         this.tvShowRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void removePersonFromTvShow(String tvShowId, PersonEntity person) {
+        TvShowEntity tvShow = this.tvShowRepository.findById(tvShowId).orElseThrow();
+        tvShow.getCreators().remove(person);
+        this.tvShowRepository.saveAndFlush(tvShow);
+    }
 }

@@ -256,4 +256,14 @@ public class MovieServiceImpl implements MovieService {
 
         this.movieRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void removePersonFromMovie(String movieId, PersonEntity person) {
+        MovieEntity movie = this.movieRepository.findById(movieId).orElseThrow();
+        movie.getProducers().remove(person);
+        movie.getDirectors().remove(person);
+        movie.getWriters().remove(person);
+        this.movieRepository.saveAndFlush(movie);
+    }
 }
