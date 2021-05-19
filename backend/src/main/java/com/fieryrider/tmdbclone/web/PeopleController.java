@@ -22,6 +22,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/people")
+@CrossOrigin
 public class PeopleController {
     private final PersonService personService;
     private final UserService userService;

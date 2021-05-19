@@ -21,6 +21,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/tv-shows")
+@CrossOrigin
 public class TvShowsController {
     private final TvShowService tvShowService;
     private final UserService userService;
