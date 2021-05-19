@@ -1,9 +1,7 @@
 package com.fieryrider.tmdbclone.services.impl;
 
-import com.fieryrider.tmdbclone.models.dtos.BasicMovieDto;
-import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
-import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
-import com.fieryrider.tmdbclone.models.dtos.UserRegisterDto;
+import com.fieryrider.tmdbclone.models.dtos.*;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.UserUpdateDto;
 import com.fieryrider.tmdbclone.models.entities.*;
 import com.fieryrider.tmdbclone.models.entities.enums.UserRole;
 import com.fieryrider.tmdbclone.repositories.UserRepository;
@@ -12,6 +10,7 @@ import com.fieryrider.tmdbclone.services.PersonService;
 import com.fieryrider.tmdbclone.services.ShowService;
 import com.fieryrider.tmdbclone.services.UserService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
             UserEntity adminUserEntity = new UserEntity("admin",
                     this.passwordEncoder.encode("1234567890"),
                     "admin@mail.com",
-                    Set.of(adminUserRoleEntity));
+                    Set.of(adminUserRoleEntity, normalUserRoleEntity));
 
             this.userRepository.saveAndFlush(adminUserEntity);
         }
@@ -60,10 +61,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUser(UserRegisterDto userRegisterDto) {
         UserEntity userEntity = this.modelMapper.map(userRegisterDto, UserEntity.class);
-        UserRoleEntity userRoleEntity =
-                this.userRoleRepository.findByUserRoleEquals(userRegisterDto.getUserRole()).orElseThrow();
-        userEntity.setRoles(Set.of(userRoleEntity));
         userEntity.setPassword(this.passwordEncoder.encode(userRegisterDto.getPassword()));
+
+        UserRoleEntity adminUserRoleEntity = this.userRoleRepository.findByUserRoleEquals(UserRole.ADMIN).orElseThrow();
+        Set<UserRoleEntity> userRoleEntities = new HashSet<>(Set.of(
+                this.userRoleRepository.findByUserRoleEquals(UserRole.valueOf(userRegisterDto.getUserRole())).orElseThrow()));
+        if (userRoleEntities.contains(adminUserRoleEntity))
+            userRoleEntities.add(this.userRoleRepository.findByUserRoleEquals(UserRole.NORMAL).orElseThrow());
+        userEntity.setRoles(userRoleEntities);
+
         this.userRepository.saveAndFlush(userEntity);
     }
 
