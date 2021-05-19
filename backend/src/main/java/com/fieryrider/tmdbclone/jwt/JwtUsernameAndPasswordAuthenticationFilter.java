@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String token = Jwts.builder()
                 .setSubject(authResult.getName())
                 .claim("authorities", authResult.getAuthorities())
@@ -57,8 +58,13 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .signWith(this.jwtConfiguration.getSecretKeyHash())
                 .compact();
 
-        List<String> permissions = authResult.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        List<String> roles = authResult.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        for (String role : roles) {
+            System.out.println(role);
+        }
+        request.setAttribute("token", this.jwtConfiguration.getTokenPrefix() + token);
+        request.setAttribute("roles", roles);
         response.addHeader(this.jwtConfiguration.getAuthorizationHeader(), this.jwtConfiguration.getTokenPrefix() + token);
-        response.addHeader("permissions", String.join(",", permissions));
+        chain.doFilter(request, response);
     }
 }
