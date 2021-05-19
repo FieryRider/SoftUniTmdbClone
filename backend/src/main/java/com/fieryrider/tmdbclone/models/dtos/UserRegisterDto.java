@@ -1,6 +1,7 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
 import com.fieryrider.tmdbclone.models.entities.enums.UserRole;
+import com.fieryrider.tmdbclone.validation.EnumNameValid;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -17,7 +18,8 @@ public class UserRegisterDto {
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email must be valid email")
     private String email;
-    private UserRole userRole;
+    @EnumNameValid(enumClass = UserRole.class)
+    private String userRole;
 
     public String getUsername() {
         return this.username;
@@ -43,11 +45,11 @@ public class UserRegisterDto {
         this.email = email;
     }
 
-    public UserRole getUserRole() {
+    public String getUserRole() {
         return this.userRole;
     }
 
-    public void setUserRole(UserRole userRole) {
+    public void setUserRole(String userRole) {
         this.userRole = userRole;
     }
 
