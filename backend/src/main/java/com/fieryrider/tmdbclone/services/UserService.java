@@ -27,4 +27,13 @@ public interface UserService {
 
     @PreAuthorize("hasRole('ROLE_NORMAL')")
     void addFavouritePerson(String id, Principal principal);
+
+    @PreAuthorize("hasRole('ROLE_NORMAL')")
+    void removeFavouriteMovie(String id, Principal principal);
+
+    @PreAuthorize("hasRole('ROLE_NORMAL')")
+    void removeFavouriteTvShow(String id, Principal principal);
+
+    @PreAuthorize("hasRole('ROLE_NORMAL')")
+    void removeFavouritePerson(String id, Principal principal);
 }

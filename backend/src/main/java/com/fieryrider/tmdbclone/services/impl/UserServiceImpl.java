@@ -131,8 +131,35 @@ public class UserServiceImpl implements UserService {
     public void addFavouritePerson(String id, Principal principal) {
         String username = (String) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
-        PersonEntity person = this.personService.getPersonById(id);
-        userEntity.getFavouritePeople().add(person);
+        PersonEntity personEntity = this.personService.getPersonById(id);
+        userEntity.getFavouritePeople().add(personEntity);
+        this.userRepository.saveAndFlush(userEntity);
+    }
+
+    @Override
+    public void removeFavouriteMovie(String id, Principal principal) {
+        String username = (String) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
+        MovieEntity movieEntity = (MovieEntity) this.showService.getShow(id);
+        userEntity.getFavouriteMovies().remove(movieEntity);
+        this.userRepository.saveAndFlush(userEntity);
+    }
+
+    @Override
+    public void removeFavouriteTvShow(String id, Principal principal) {
+        String username = (String) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
+        TvShowEntity tvShowEntity = (TvShowEntity) this.showService.getShow(id);
+        userEntity.getFavouriteTvShows().remove(tvShowEntity);
+        this.userRepository.saveAndFlush(userEntity);
+    }
+
+    @Override
+    public void removeFavouritePerson(String id, Principal principal) {
+        String username = (String) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
+        PersonEntity personEntity = this.personService.getPersonById(id);
+        userEntity.getFavouritePeople().remove(personEntity);
         this.userRepository.saveAndFlush(userEntity);
     }
 }

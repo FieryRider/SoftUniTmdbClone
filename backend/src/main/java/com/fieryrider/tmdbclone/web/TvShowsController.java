@@ -116,4 +116,14 @@ public class TvShowsController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/favourite/{id}")
+    public ResponseEntity<Void> removeFromFavourite(@PathVariable String id, Principal principal) {
+        try {
+            this.userService.removeFavouriteTvShow(id, principal);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

@@ -116,4 +116,14 @@ public class MoviesController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/favourite/{id}")
+    public ResponseEntity<Void> removeFromFavourite(@PathVariable String id, Principal principal) {
+        try {
+            this.userService.removeFavouriteMovie(id, principal);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
