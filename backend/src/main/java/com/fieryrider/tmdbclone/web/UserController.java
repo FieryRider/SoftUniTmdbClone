@@ -3,13 +3,13 @@ package com.fieryrider.tmdbclone.web;
 import com.fieryrider.tmdbclone.models.dtos.UserRegisterDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.TokenDto;
 import com.fieryrider.tmdbclone.services.UserService;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/users")
@@ -31,7 +31,7 @@ public class UserController {
         try {
             this.userService.registerUser(userRegisterDto);
             return ResponseEntity.ok().build();
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.status(409).build();
         }
     }
