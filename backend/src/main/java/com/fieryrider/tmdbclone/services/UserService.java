@@ -1,6 +1,7 @@
 package com.fieryrider.tmdbclone.services;
 
 import com.fieryrider.tmdbclone.models.dtos.*;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.UserUpdateDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.security.Principal;
@@ -9,6 +10,12 @@ import java.util.List;
 public interface UserService {
     void initAdminUser();
     void registerUser(UserRegisterDto userRegisterDto);
+
+    @PreAuthorize("hasRole('ROLE_NORMAL')")
+    UserDetailsDto getUserDetails(Principal principal);
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    void editUser(UserUpdateDto userUpdateDto, Principal principal);
 
     @PreAuthorize("hasRole('ROLE_NORMAL')")
     List<BasicMovieDto> getFavouriteMovies(Principal principal);

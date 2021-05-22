@@ -18,6 +18,8 @@ public class UserEntity extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<UserRoleEntity> roles;
 
+    private String profilePictureUrl;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "favourite_movies",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -66,6 +68,14 @@ public class UserEntity extends BaseEntity {
 
     public void setRoles(Set<UserRoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public String getProfilePictureUrl() {
+        return this.profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public Set<MovieEntity> getFavouriteMovies() {

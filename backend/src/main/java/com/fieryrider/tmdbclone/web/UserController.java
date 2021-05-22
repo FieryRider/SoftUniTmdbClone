@@ -1,6 +1,8 @@
 package com.fieryrider.tmdbclone.web;
 
+import com.fieryrider.tmdbclone.models.dtos.UserDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.UserRegisterDto;
+import com.fieryrider.tmdbclone.models.dtos.update_dtos.UserUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.TokenDto;
 import com.fieryrider.tmdbclone.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,18 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user")
-    public String getUser(Principal principal) {
-        return principal.getName();
+    @GetMapping("/profile")
+    public UserDetailsDto getUser(Principal principal) {
+        return this.userService.getUserDetails(principal);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<Void> editUser(@Valid @RequestBody UserUpdateDto userUpdateDto, Principal principal) {
+        try {
+            this.userService.editUser(userUpdateDto, principal);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

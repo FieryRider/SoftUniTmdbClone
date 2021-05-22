@@ -74,6 +74,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDetailsDto getUserDetails(Principal principal) {
+        String username = (String) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
+        TypeMap<UserEntity, UserDetailsDto> userEntityUserDetailsDtoTypeMap = this.modelMapper.createTypeMap(UserEntity.class, UserDetailsDto.class).addMappings(
+                m -> {
+                    m.map(UserEntity::getUsername, UserDetailsDto::setUsername);
+                    m.map(UserEntity::getPassword, UserDetailsDto::setPassword);
+                    m.map(UserEntity::getEmail, UserDetailsDto::setEmail);
+                    m.map(s -> s.getRoles().stream().map(UserRoleEntity::getUserRole).collect(Collectors.toSet()), UserDetailsDto::setRoles);
+                }
+        );
+        return userEntityUserDetailsDtoTypeMap.map(userEntity);
+    }
+
+    @Override
+    public void editUser(UserUpdateDto userUpdateDto, Principal principal) {
+        String username = (String) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
+        userEntity.setPassword(this.passwordEncoder.encode(userUpdateDto.getPassword()));
+        userEntity.setEmail(userUpdateDto.getEmail());
+        userEntity.setProfilePictureUrl(userUpdateDto.getProfilePictureUrl());
+
+        UserRole newUserRole = UserRole.valueOf(userUpdateDto.getRole());
+        UserRoleEntity newUserRoleEntity = this.userRoleRepository.findByUserRoleEquals(newUserRole).orElseThrow();
+        userEntity.setRoles(new HashSet<>(Set.of(newUserRoleEntity)));
+
+        UserRoleEntity adminUserRoleEntity = this.userRoleRepository.findByUserRoleEquals(UserRole.ADMIN).orElseThrow();
+        if (newUserRoleEntity.equals(adminUserRoleEntity))
+            userEntity.getRoles().add(this.userRoleRepository.findByUserRoleEquals(UserRole.NORMAL).orElseThrow());
+
+        this.userRepository.saveAndFlush(userEntity);
+    }
+
+    @Override
     public List<BasicMovieDto> getFavouriteMovies(Principal principal) {
         String username = (String) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
