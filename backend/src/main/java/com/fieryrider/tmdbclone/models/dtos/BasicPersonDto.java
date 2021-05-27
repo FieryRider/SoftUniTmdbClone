@@ -7,6 +7,8 @@ public class BasicPersonDto {
 
     private String name;
 
+    private String profilePictureUrl;
+
     private List<String> knownFor;
 
     private boolean popular;
@@ -41,6 +43,14 @@ public class BasicPersonDto {
 
     public void setPopular(boolean popular) {
         this.popular = popular;
+    }
+
+    public String getProfilePictureUrl() {
+        return this.profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public BasicPersonDto() {
