@@ -4,6 +4,7 @@ import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonKnownForDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.entities.*;
@@ -56,7 +57,10 @@ public class PersonServiceImpl implements PersonService {
         List<BasicPersonDto> basicPersonDtos = new ArrayList<>();
         for (PersonEntity person : people) {
             BasicPersonDto basicPersonDto = this.modelMapper.map(person, BasicPersonDto.class);
-            List<String> knownFor = person.getKnownFor().stream().map(BaseEntity::getId).collect(Collectors.toList());
+            List<PersonKnownForDto> knownFor = person.getKnownFor()
+                    .stream()
+                    .map(showEntity -> this.modelMapper.map(showEntity, PersonKnownForDto.class))
+                    .collect(Collectors.toList());
             basicPersonDto.setKnownFor(knownFor);
             basicPersonDtos.add(basicPersonDto);
         }

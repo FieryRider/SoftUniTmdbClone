@@ -1,5 +1,7 @@
 package com.fieryrider.tmdbclone.models.dtos;
 
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonKnownForDto;
+
 import java.util.List;
 
 public class BasicPersonDto {
@@ -9,7 +11,7 @@ public class BasicPersonDto {
 
     private String profilePictureUrl;
 
-    private List<String> knownFor;
+    private List<PersonKnownForDto> knownFor;
 
     private boolean popular;
 
@@ -29,11 +31,11 @@ public class BasicPersonDto {
         this.name = name;
     }
 
-    public List<String> getKnownFor() {
+    public List<PersonKnownForDto> getKnownFor() {
         return this.knownFor;
     }
 
-    public void setKnownFor(List<String> knownFor) {
+    public void setKnownFor(List<PersonKnownForDto> knownFor) {
         this.knownFor = knownFor;
     }
 
