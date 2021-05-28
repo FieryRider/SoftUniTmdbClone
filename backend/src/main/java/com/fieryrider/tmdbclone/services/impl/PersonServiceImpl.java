@@ -4,6 +4,7 @@ import com.fieryrider.tmdbclone.exceptions.NoSuchPersonException;
 import com.fieryrider.tmdbclone.models.dtos.BasicPersonDto;
 import com.fieryrider.tmdbclone.models.dtos.PersonDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.PersonCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.PersonKnownForDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
@@ -79,6 +80,8 @@ public class PersonServiceImpl implements PersonService {
 
         PersonDetailsDto personDetailsDto = this.modelMapper.map(person, PersonDetailsDto.class);
         personDetailsDto.setKnownCredits(person.getActing().size() + person.getDirecting().size() + person.getProducing().size() + person.getWriting().size());
+        personDetailsDto.setGender(new EnumDto(person.getGender().name(), person.getGender().getDisplayName()));
+        personDetailsDto.setMainRole(new EnumDto(person.getMainRole().name(), person.getMainRole().getDisplayName()));
 
         return personDetailsDto;
     }
