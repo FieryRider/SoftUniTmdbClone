@@ -111,7 +111,7 @@ public class MoviesController {
     public ResponseEntity<Void> unsetPopular(@PathVariable String id) {
         try {
             this.movieService.setPopular(id, false);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (EmptyResultDataAccessException ex) {
             return ResponseEntity.notFound().build();
         }

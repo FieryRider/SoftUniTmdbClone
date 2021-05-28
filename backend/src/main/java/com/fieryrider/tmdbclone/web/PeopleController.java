@@ -8,7 +8,6 @@ import com.fieryrider.tmdbclone.models.dtos.update_dtos.PersonUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.services.PersonService;
 import com.fieryrider.tmdbclone.services.UserService;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,8 +59,12 @@ public class PeopleController {
     @PostMapping
     public ResponseEntity<EntityIdDto> createPerson(@Valid @RequestBody PersonCreateDto personCreateDto,
                                                UriComponentsBuilder uriComponentsBuilder) {
-        EntityIdDto personId = this.personService.add(personCreateDto);
-        return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(personId);
+        try {
+            EntityIdDto personId = this.personService.add(personCreateDto);
+            return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(personId);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/popular/{id}")
@@ -69,7 +72,7 @@ public class PeopleController {
         try {
             this.personService.setPopular(id, true);
             return ResponseEntity.ok().build();
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -99,7 +102,7 @@ public class PeopleController {
         try {
             this.personService.deleteById(id);
             return ResponseEntity.noContent().build();
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -108,8 +111,8 @@ public class PeopleController {
     public ResponseEntity<Void> unsetPopular(@PathVariable String id) {
         try {
             this.personService.setPopular(id, false);
-            return ResponseEntity.ok().build();
-        } catch (EmptyResultDataAccessException ex) {
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
         }
     }

@@ -111,7 +111,7 @@ public class TvShowsController {
     public ResponseEntity<Void> unsetPopular(@PathVariable String id) {
         try {
             this.tvShowService.setPopular(id, false);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (EmptyResultDataAccessException ex) {
             return ResponseEntity.notFound().build();
         }
