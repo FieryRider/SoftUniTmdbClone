@@ -182,6 +182,8 @@ public class TvShowServiceImpl implements TvShowService {
             tvShow.setType(TvShowType.valueOf(tvShowUpdateDto.getType()));
         if (tvShowUpdateDto.getStatus() != null)
             tvShow.setStatus(TvShowStatus.valueOf(tvShowUpdateDto.getStatus()));
+        if (tvShowUpdateDto.getReleaseYear() != null)
+            tvShow.setReleaseYear(tvShowUpdateDto.getReleaseYear());
         if (tvShowUpdateDto.getNetwork() != null)
             tvShow.setNetwork(tvShowUpdateDto.getNetwork());
 
