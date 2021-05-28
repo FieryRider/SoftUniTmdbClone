@@ -6,6 +6,7 @@ import com.fieryrider.tmdbclone.exceptions.NoSuchTvShowException;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
 import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
 import com.fieryrider.tmdbclone.models.entities.PersonEntity;
@@ -54,6 +55,12 @@ public class TvShowServiceImpl implements TvShowService {
         }
 
         TvShowDetailsDto tvShowDetailsDto = this.modelMapper.map(tvShow, TvShowDetailsDto.class);
+        Set<EnumDto> genres = new HashSet<>();
+        for (Genre genre : tvShow.getGenres()) {
+            EnumDto enumDto = new EnumDto(genre.name(), genre.getDisplayName());
+            genres.add(enumDto);
+        }
+        tvShowDetailsDto.setGenres(genres);
 
         return tvShowDetailsDto;
     }
