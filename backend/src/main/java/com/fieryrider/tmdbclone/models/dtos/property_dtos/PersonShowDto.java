@@ -4,6 +4,7 @@ public class PersonShowDto {
     private String id;
     private String title;
     private int year;
+    private String posterUrl;
 
     public String getId() {
         return this.id;
@@ -27,6 +28,14 @@ public class PersonShowDto {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public String getPosterUrl() {
+        return this.posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
     }
 
     public PersonShowDto() {
