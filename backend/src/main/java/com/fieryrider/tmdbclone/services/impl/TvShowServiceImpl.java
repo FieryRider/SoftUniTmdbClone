@@ -61,6 +61,8 @@ public class TvShowServiceImpl implements TvShowService {
             genres.add(enumDto);
         }
         tvShowDetailsDto.setGenres(genres);
+        tvShowDetailsDto.setType(new EnumDto(tvShow.getType().name(), tvShow.getType().getDisplayName()));
+        tvShowDetailsDto.setStatus(new EnumDto(tvShow.getStatus().name(), tvShow.getStatus().getDisplayName()));
 
         return tvShowDetailsDto;
     }
