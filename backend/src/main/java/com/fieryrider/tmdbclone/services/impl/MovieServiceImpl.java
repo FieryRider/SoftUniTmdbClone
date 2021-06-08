@@ -180,12 +180,12 @@ public class MovieServiceImpl implements MovieService {
             }
             Set<PersonEntity> currentProducers = movie.getProducers();
             for (PersonEntity producer : currentProducers) {
+                // XXX: Does it save the person?
                 if (!newProducers.contains(producer))
                     producer.getProducing().remove(movie);
             }
-            currentProducers.removeIf(producer -> !newProducers.contains(producer));
-            currentProducers.addAll(newProducers);
-            for (PersonEntity producer : currentProducers)
+            movie.setProducers(newProducers);
+            for (PersonEntity producer : newProducers)
                 producer.getProducing().add(movie);
         }
         if (movieUpdateDto.getDirectors() != null) {
@@ -199,12 +199,12 @@ public class MovieServiceImpl implements MovieService {
             }
             Set<PersonEntity> currentDirectors = movie.getDirectors();
             for (PersonEntity director : currentDirectors) {
+                // XXX: Does it save the person?
                 if (!newDirectors.contains(director))
                     director.getDirecting().remove(movie);
             }
-            currentDirectors.removeIf(director -> !newDirectors.contains(director));
-            currentDirectors.addAll(newDirectors);
-            for (PersonEntity director : currentDirectors)
+            movie.setDirectors(newDirectors);
+            for (PersonEntity director : newDirectors)
                 director.getDirecting().add(movie);
         }
         if (movieUpdateDto.getWriters() != null) {
@@ -218,12 +218,12 @@ public class MovieServiceImpl implements MovieService {
             }
             Set<PersonEntity> currentWriters = movie.getWriters();
             for (PersonEntity writer : currentWriters) {
+                // XXX: Does it save the person?
                 if (!newWriters.contains(writer))
                     writer.getWriting().remove(movie);
             }
-            currentWriters.removeIf(writer -> !newWriters.contains(writer));
-            currentWriters.addAll(newWriters);
-            for (PersonEntity writer : currentWriters)
+            movie.setWriters(newWriters);
+            for (PersonEntity writer : newWriters)
                 writer.getWriting().add(movie);
         }
         if (movieUpdateDto.getCast() != null) {
@@ -237,12 +237,13 @@ public class MovieServiceImpl implements MovieService {
             }
             Set<PersonEntity> currentCast = movie.getCast();
             for (PersonEntity actor : currentCast) {
+                // XXX: Does it save the person?
                 if (!newCast.contains(actor))
                     actor.getActing().remove(movie);
             }
-            currentCast.removeIf(actor -> !newCast.contains(actor));
-            currentCast.addAll(newCast);
-            for (PersonEntity actor : currentCast)
+            movie.setCast(newCast);
+            // XXX: Does it save the person?
+            for (PersonEntity actor : newCast)
                 actor.getActing().add(movie);
         }
 

@@ -131,6 +131,14 @@ public class TvShowServiceImpl implements TvShowService {
             tvShow.setPosterUrl(tvShowUpdateDto.getPosterUrl());
         if (tvShowUpdateDto.getOfficialLanguage() != null)
             tvShow.setOfficialLanguage(tvShowUpdateDto.getOfficialLanguage());
+        if (tvShowUpdateDto.getType() != null)
+            tvShow.setType(TvShowType.valueOf(tvShowUpdateDto.getType()));
+        if (tvShowUpdateDto.getStatus() != null)
+            tvShow.setStatus(TvShowStatus.valueOf(tvShowUpdateDto.getStatus()));
+        if (tvShowUpdateDto.getReleaseYear() != null)
+            tvShow.setReleaseYear(tvShowUpdateDto.getReleaseYear());
+        if (tvShowUpdateDto.getNetwork() != null)
+            tvShow.setNetwork(tvShowUpdateDto.getNetwork());
 
         if (tvShowUpdateDto.getGenres() != null) {
             Set<Genre> genres = new HashSet<>();
@@ -138,7 +146,6 @@ public class TvShowServiceImpl implements TvShowService {
                 genres.add(Genre.valueOf(genre));
             tvShow.setGenres(genres);
         }
-
         if (tvShowUpdateDto.getCast() != null) {
             Set<PersonEntity> newCast = new HashSet<>();
             for (String actorId : tvShowUpdateDto.getCast()) {
@@ -151,12 +158,12 @@ public class TvShowServiceImpl implements TvShowService {
 
             Set<PersonEntity> currentCast = tvShow.getCast();
             for (PersonEntity actor : currentCast) {
+                // XXX: Does it save the person?
                 if (!newCast.contains(actor))
                     actor.getActing().remove(tvShow);
             }
-            currentCast.removeIf(actor -> !newCast.contains(actor));
-            currentCast.addAll(newCast);
-            for (PersonEntity actor : currentCast)
+            tvShow.setCast(newCast);
+            for (PersonEntity actor : newCast)
                 actor.getActing().add(tvShow);
         }
         if (tvShowUpdateDto.getCreators() != null) {
@@ -171,23 +178,14 @@ public class TvShowServiceImpl implements TvShowService {
 
             Set<PersonEntity> currentCreators = tvShow.getCreators();
             for (PersonEntity creator : currentCreators) {
+                // XXX: Does it save the person?
                 if (!newCreators.contains(creator))
                     creator.getCreating().remove(tvShow);
             }
-            currentCreators.removeIf(creator -> !newCreators.contains(creator));
-            currentCreators.addAll(newCreators);
-            for (PersonEntity creator : currentCreators)
+            tvShow.setCreators(newCreators);
+            for (PersonEntity creator : newCreators)
                 creator.getCreating().add(tvShow);
         }
-
-        if (tvShowUpdateDto.getType() != null)
-            tvShow.setType(TvShowType.valueOf(tvShowUpdateDto.getType()));
-        if (tvShowUpdateDto.getStatus() != null)
-            tvShow.setStatus(TvShowStatus.valueOf(tvShowUpdateDto.getStatus()));
-        if (tvShowUpdateDto.getReleaseYear() != null)
-            tvShow.setReleaseYear(tvShowUpdateDto.getReleaseYear());
-        if (tvShowUpdateDto.getNetwork() != null)
-            tvShow.setNetwork(tvShowUpdateDto.getNetwork());
 
         this.tvShowRepository.saveAndFlush(tvShow);
     }
