@@ -2,8 +2,8 @@ package com.fieryrider.tmdbclone.services.impl;
 
 import com.fieryrider.tmdbclone.exceptions.*;
 import com.fieryrider.tmdbclone.models.dtos.BasicMovieDto;
-import com.fieryrider.tmdbclone.models.dtos.MovieDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.MovieCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.detail_dtos.MovieDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.MovieUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
@@ -14,11 +14,14 @@ import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
 import com.fieryrider.tmdbclone.repositories.MovieRepository;
 import com.fieryrider.tmdbclone.services.MovieService;
 import com.fieryrider.tmdbclone.services.PersonService;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -26,11 +29,27 @@ public class MovieServiceImpl implements MovieService {
     private final PersonService personService;
     private final ModelMapper modelMapper;
 
+    private final TypeMap<MovieEntity, MovieDetailsDto> movieEntityMovieDetailsDtoTypeMap;
+
     public MovieServiceImpl(MovieRepository movieRepository, PersonService personService, ModelMapper modelMapper) {
         super();
         this.movieRepository = movieRepository;
         this.personService = personService;
         this.modelMapper = modelMapper;
+
+        Converter<Map<String, String>, Map<String, Set<String>>> charactersConverter = c -> c.getSource().entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(), Arrays.stream(entry.getValue().split("\0")).collect(Collectors.toSet()))
+                ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, HashMap::new));
+        Converter<MovieStatus, EnumDto> movieStatusConverter = c -> new EnumDto(c.getSource().name(), c.getSource().getDisplayName());
+        Converter<Set<Genre>, Set<EnumDto>> genreEnumDtoConverter = c -> c.getSource().stream().map(genre -> new EnumDto(genre.name(), genre.getDisplayName())).collect(Collectors.toSet());
+        this.movieEntityMovieDetailsDtoTypeMap =
+                this.modelMapper.createTypeMap(MovieEntity.class, MovieDetailsDto.class).addMappings(
+                        m -> {
+                            m.using(movieStatusConverter).map(MovieEntity::getStatus, MovieDetailsDto::setStatus);
+                            m.using(genreEnumDtoConverter).map(MovieEntity::getGenres, MovieDetailsDto::setGenres);
+                            m.using(charactersConverter).map(MovieEntity::getCharacters, MovieDetailsDto::setCharacters);
+                        }
+                );
     }
 
     @Override
@@ -55,15 +74,9 @@ public class MovieServiceImpl implements MovieService {
             throw new NoSuchMovieException();
         }
 
-        MovieDetailsDto movieDetailsDto = this.modelMapper.map(movie, MovieDetailsDto.class);
-        movieDetailsDto.setStatus(new EnumDto(movie.getStatus().name(), movie.getStatus().getDisplayName()));
-        Set<EnumDto> genres = new HashSet<>();
-        for (Genre genre : movie.getGenres()) {
-            EnumDto enumDto = new EnumDto(genre.name(), genre.getDisplayName());
-            genres.add(enumDto);
-        }
-        movieDetailsDto.setGenres(genres);
-        return movieDetailsDto;
+
+
+        return this.movieEntityMovieDetailsDtoTypeMap.map(movie);
     }
 
     @Override
@@ -93,6 +106,7 @@ public class MovieServiceImpl implements MovieService {
         Set<PersonEntity> producers = new HashSet<>();
         Set<PersonEntity> directors = new HashSet<>();
         Set<PersonEntity> writers = new HashSet<>();
+        Map<String, String> characters = new HashMap<>();
         if (movieCreateDto.getProducers() != null) {
             for (String producerId : movieCreateDto.getProducers()) {
                 try {
@@ -131,10 +145,16 @@ public class MovieServiceImpl implements MovieService {
                 throw new NoSuchCastFound();
             }
         }
+        for (Map.Entry<String, Set<String>> characterData : movieCreateDto.getCharacters().entrySet()) {
+            String actorId = characterData.getKey();
+            String characterNames = characterData.getValue().stream().map(String::trim).collect(Collectors.joining("\0"));
+            characters.put(actorId, characterNames);
+        }
         movie.setCast(cast);
         movie.setProducers(producers);
         movie.setDirectors(directors);
         movie.setWriters(writers);
+        movie.setCharacters(characters);
         MovieEntity saved = this.movieRepository.saveAndFlush(movie);
         return new EntityIdDto(saved.getId());
     }
@@ -245,6 +265,18 @@ public class MovieServiceImpl implements MovieService {
             // XXX: Does it save the person?
             for (PersonEntity actor : newCast)
                 actor.getActing().add(movie);
+
+            movie.getCharacters().entrySet().removeIf(actorCharacters -> !movieUpdateDto.getCast().contains(actorCharacters.getKey()));
+        }
+        if (movieUpdateDto.getCharacters() != null) {
+            Map<String, String> newCharacters = new HashMap<>();
+            for (Map.Entry<String, Set<String>> characterData : movieUpdateDto.getCharacters().entrySet()) {
+                String actorId = characterData.getKey();
+                String characterNames = characterData.getValue().stream().map(String::trim).collect(Collectors.joining("\0"));
+                PersonEntity actor = this.personService.getPersonById(actorId); // just so it can throw NoSuchElementException if there isn't an actor with the given id
+                newCharacters.put(actorId, characterNames);
+            }
+            movie.setCharacters(newCharacters);
         }
 
         this.movieRepository.saveAndFlush(movie);

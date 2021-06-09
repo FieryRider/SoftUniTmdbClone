@@ -3,6 +3,7 @@ package com.fieryrider.tmdbclone.models.entities;
 import com.fieryrider.tmdbclone.models.entities.enums.Genre;
 
 import javax.persistence.*;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -18,6 +19,8 @@ public abstract class ShowEntity extends BaseEntity {
     private int rating;
 
     private int releaseYear;
+
+    private boolean popular;
 
     @Column(name = "poster_url", nullable = false)
     private String posterUrl;
@@ -37,7 +40,12 @@ public abstract class ShowEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id"))
     private Set<PersonEntity> cast;
 
-    private boolean popular;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "show_character_mapping",
+        joinColumns = { @JoinColumn(name = "show_id", referencedColumnName = "id") })
+    @MapKeyColumn(name = "actor_name")
+    @Column
+    private Map<String, String> characters;
 
     public String getTitle() {
         return this.title;
@@ -79,6 +87,14 @@ public abstract class ShowEntity extends BaseEntity {
         this.posterUrl = posterUrl;
     }
 
+    public boolean isPopular() {
+        return this.popular;
+    }
+
+    public void setPopular(boolean popular) {
+        this.popular = popular;
+    }
+
     public String getOfficialLanguage() {
         return this.officialLanguage;
     }
@@ -103,12 +119,12 @@ public abstract class ShowEntity extends BaseEntity {
         this.cast = cast;
     }
 
-    public boolean isPopular() {
-        return this.popular;
+    public Map<String, String> getCharacters() {
+        return this.characters;
     }
 
-    public void setPopular(boolean popular) {
-        this.popular = popular;
+    public void setCharacters(Map<String, String> characters) {
+        this.characters = characters;
     }
 
     public ShowEntity() {
@@ -125,7 +141,7 @@ public abstract class ShowEntity extends BaseEntity {
         this.popular = false;
     }
 
-    public ShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast) {
+    public ShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast, Map<String, String> characters) {
         this.title = title;
         this.overview = overview;
         this.rating = rating;
@@ -134,6 +150,7 @@ public abstract class ShowEntity extends BaseEntity {
         this.officialLanguage = officialLanguage;
         this.genres = genres;
         this.cast = cast;
+        this.characters = characters;
         this.popular = false;
     }
 }

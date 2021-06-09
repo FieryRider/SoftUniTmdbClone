@@ -6,6 +6,7 @@ import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
 import com.fieryrider.tmdbclone.validation.EnumNameValid;
 import com.fieryrider.tmdbclone.validation.NullOrNotBlank;
 
+import java.util.Map;
 import java.util.Set;
 
 public class TvShowUpdateDto {
@@ -39,6 +40,8 @@ public class TvShowUpdateDto {
 
     @NullOrNotBlank(message = "Network cannot be empty")
     private String network;
+
+    private Map<String, Set<String>> characters;
 
     public String getTitle() {
         return this.title;
@@ -134,6 +137,14 @@ public class TvShowUpdateDto {
 
     public void setNetwork(String network) {
         this.network = network;
+    }
+
+    public Map<String, Set<String>> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Map<String, Set<String>> characters) {
+        this.characters = characters;
     }
 
     public TvShowUpdateDto() {

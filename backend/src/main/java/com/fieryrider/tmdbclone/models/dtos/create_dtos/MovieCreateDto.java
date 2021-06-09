@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 
 public class MovieCreateDto {
@@ -62,6 +63,10 @@ public class MovieCreateDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull(message = "You must specify release date")
     private LocalDate releaseDate;
+
+    // key - actorId, value - character names
+    @NotNull(message = "Characters cannot be null")
+    private Map<String, Set<String>> characters;
 
     public String getTitle() {
         return this.title;
@@ -173,6 +178,14 @@ public class MovieCreateDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Map<String, Set<String>> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Map<String, Set<String>> characters) {
+        this.characters = characters;
     }
 
     public MovieCreateDto() {

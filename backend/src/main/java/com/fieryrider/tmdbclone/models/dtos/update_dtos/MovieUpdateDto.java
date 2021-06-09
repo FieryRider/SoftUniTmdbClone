@@ -12,6 +12,7 @@ import com.fieryrider.tmdbclone.validation.NullOrNotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 
 public class MovieUpdateDto {
@@ -50,6 +51,8 @@ public class MovieUpdateDto {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate releaseDate;
+
+    private Map<String, Set<String>> characters;
 
     public String getTitle() {
         return this.title;
@@ -161,6 +164,14 @@ public class MovieUpdateDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Map<String, Set<String>> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Map<String, Set<String>> characters) {
+        this.characters = characters;
     }
 
     public MovieUpdateDto() {

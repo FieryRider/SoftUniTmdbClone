@@ -5,6 +5,7 @@ import com.fieryrider.tmdbclone.models.entities.enums.TvShowStatus;
 import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
 
 import javax.persistence.*;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -69,8 +70,8 @@ public class TvShowEntity extends ShowEntity {
         this.network = network;
     }
 
-    public TvShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast, Set<PersonEntity> creators, TvShowType type, TvShowStatus status, String network) {
-        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast);
+    public TvShowEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast, Set<PersonEntity> creators, TvShowType type, TvShowStatus status, String network, Map<String, String> characters) {
+        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast, characters);
         this.type = type;
         this.status = status;
         this.network = network;

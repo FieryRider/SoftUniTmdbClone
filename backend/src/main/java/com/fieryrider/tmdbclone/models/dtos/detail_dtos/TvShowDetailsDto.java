@@ -1,8 +1,9 @@
-package com.fieryrider.tmdbclone.models.dtos;
+package com.fieryrider.tmdbclone.models.dtos.detail_dtos;
 
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowPersonDto;
 
+import java.util.Map;
 import java.util.Set;
 
 public class TvShowDetailsDto {
@@ -31,6 +32,8 @@ public class TvShowDetailsDto {
     private Set<ShowPersonDto> cast;
 
     private Set<ShowPersonDto> creators;
+
+    private Map<String, Set<String>> characters;
 
     public String getId() {
         return this.id;
@@ -134,6 +137,14 @@ public class TvShowDetailsDto {
 
     public void setCreators(Set<ShowPersonDto> creators) {
         this.creators = creators;
+    }
+
+    public Map<String, Set<String>> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Map<String, Set<String>> characters) {
+        this.characters = characters;
     }
 
     public TvShowDetailsDto() {

@@ -1,4 +1,4 @@
-package com.fieryrider.tmdbclone.models.dtos;
+package com.fieryrider.tmdbclone.models.dtos.detail_dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -8,6 +8,7 @@ import com.fieryrider.tmdbclone.models.dtos.property_dtos.ShowPersonDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 
 public class MovieDetailsDto {
@@ -42,6 +43,8 @@ public class MovieDetailsDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T00:00:00.000Z'")
     private LocalDate releaseDate;
+
+    private Map<String, Set<String>> characters;
 
     public String getId() {
         return this.id;
@@ -161,6 +164,14 @@ public class MovieDetailsDto {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Map<String, Set<String>> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Map<String, Set<String>> characters) {
+        this.characters = characters;
     }
 
     public MovieDetailsDto() {

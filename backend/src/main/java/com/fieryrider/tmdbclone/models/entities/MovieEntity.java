@@ -6,6 +6,7 @@ import com.fieryrider.tmdbclone.models.entities.enums.MovieStatus;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -111,8 +112,8 @@ public class MovieEntity extends ShowEntity {
         this.releaseDate = releaseDate;
     }
 
-    public MovieEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast, Set<PersonEntity> producers, Set<PersonEntity> directors, Set<PersonEntity> writers, MovieStatus status, BigDecimal budget, LocalDate releaseDate) {
-        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast);
+    public MovieEntity(String title, String overview, int rating, int releaseYear, String posterUrl, String officialLanguage, Set<Genre> genres, Set<PersonEntity> cast, Set<PersonEntity> producers, Set<PersonEntity> directors, Set<PersonEntity> writers, MovieStatus status, BigDecimal budget, LocalDate releaseDate, Map<String, String> characters) {
+        super(title, overview, rating, releaseYear, posterUrl, officialLanguage, genres, cast, characters);
         this.status = status;
         this.budget = budget;
         this.releaseDate = releaseDate;

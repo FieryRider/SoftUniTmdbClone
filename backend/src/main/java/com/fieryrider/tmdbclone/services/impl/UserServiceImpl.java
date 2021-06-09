@@ -1,6 +1,7 @@
 package com.fieryrider.tmdbclone.services.impl;
 
 import com.fieryrider.tmdbclone.models.dtos.*;
+import com.fieryrider.tmdbclone.models.dtos.detail_dtos.UserDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.UserUpdateDto;
 import com.fieryrider.tmdbclone.models.entities.*;
 import com.fieryrider.tmdbclone.models.entities.enums.UserRole;

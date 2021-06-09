@@ -7,6 +7,7 @@ import com.fieryrider.tmdbclone.validation.EnumNameValid;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 import java.util.Set;
 
 public class TvShowCreateDto {
@@ -50,6 +51,9 @@ public class TvShowCreateDto {
     @NotNull(message = "Network cannot be null")
     @NotBlank(message = "Network cannot be empty")
     private String network;
+
+    @NotNull
+    private Map<String, Set<String>> characters;
 
     public String getTitle() {
         return this.title;
@@ -145,6 +149,14 @@ public class TvShowCreateDto {
 
     public void setNetwork(String network) {
         this.network = network;
+    }
+
+    public Map<String, Set<String>> getCharacters() {
+        return this.characters;
+    }
+
+    public void setCharacters(Map<String, Set<String>> characters) {
+        this.characters = characters;
     }
 
     public TvShowCreateDto() {

@@ -1,6 +1,7 @@
 package com.fieryrider.tmdbclone.services;
 
 import com.fieryrider.tmdbclone.models.dtos.*;
+import com.fieryrider.tmdbclone.models.dtos.detail_dtos.UserDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.UserUpdateDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 

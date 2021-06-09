@@ -1,6 +1,6 @@
 package com.fieryrider.tmdbclone.web;
 
-import com.fieryrider.tmdbclone.models.dtos.UserDetailsDto;
+import com.fieryrider.tmdbclone.models.dtos.detail_dtos.UserDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.UserRegisterDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.UserUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.TokenDto;

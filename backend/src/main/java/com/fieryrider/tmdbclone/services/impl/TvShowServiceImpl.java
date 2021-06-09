@@ -4,8 +4,8 @@ import com.fieryrider.tmdbclone.exceptions.NoSuchCastFound;
 import com.fieryrider.tmdbclone.exceptions.NoSuchProducerFound;
 import com.fieryrider.tmdbclone.exceptions.NoSuchTvShowException;
 import com.fieryrider.tmdbclone.models.dtos.BasicTvShowDto;
-import com.fieryrider.tmdbclone.models.dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.create_dtos.TvShowCreateDto;
+import com.fieryrider.tmdbclone.models.dtos.detail_dtos.TvShowDetailsDto;
 import com.fieryrider.tmdbclone.models.dtos.property_dtos.EnumDto;
 import com.fieryrider.tmdbclone.models.dtos.update_dtos.TvShowUpdateDto;
 import com.fieryrider.tmdbclone.models.dtos.utility_dtos.EntityIdDto;
@@ -17,11 +17,14 @@ import com.fieryrider.tmdbclone.models.entities.enums.TvShowType;
 import com.fieryrider.tmdbclone.repositories.TvShowRepository;
 import com.fieryrider.tmdbclone.services.PersonService;
 import com.fieryrider.tmdbclone.services.TvShowService;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TvShowServiceImpl implements TvShowService {
@@ -29,10 +32,28 @@ public class TvShowServiceImpl implements TvShowService {
     private final PersonService personService;
     private final ModelMapper modelMapper;
 
+    private final TypeMap<TvShowEntity, TvShowDetailsDto> tvShowEntityTvShowDetailsDtoTypeMap;
+
     public TvShowServiceImpl(TvShowRepository tvShowRepository, PersonService personService, ModelMapper modelMapper) {
         this.tvShowRepository = tvShowRepository;
         this.personService = personService;
         this.modelMapper = modelMapper;
+
+        Converter<Map<String, String>, Map<String, Set<String>>> charactersConverter = c -> c.getSource().entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(), Arrays.stream(entry.getValue().split("\0")).collect(Collectors.toSet()))
+                ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, HashMap::new));
+        Converter<TvShowStatus, EnumDto> tvShowStatusConverter = c -> new EnumDto(c.getSource().name(), c.getSource().getDisplayName());
+        Converter<TvShowType, EnumDto> tvShowTypeConverter = c -> new EnumDto(c.getSource().name(), c.getSource().getDisplayName());
+        Converter<Set<Genre>, Set<EnumDto>> genreEnumDtoConverter = c -> c.getSource().stream().map(genre -> new EnumDto(genre.name(), genre.getDisplayName())).collect(Collectors.toSet());
+        this.tvShowEntityTvShowDetailsDtoTypeMap =
+                this.modelMapper.createTypeMap(TvShowEntity.class, TvShowDetailsDto.class).addMappings(
+                        m -> {
+                            m.using(tvShowStatusConverter).map(TvShowEntity::getStatus, TvShowDetailsDto::setStatus);
+                            m.using(tvShowTypeConverter).map(TvShowEntity::getType, TvShowDetailsDto::setType);
+                            m.using(genreEnumDtoConverter).map(TvShowEntity::getGenres, TvShowDetailsDto::setGenres);
+                            m.using(charactersConverter).map(TvShowEntity::getCharacters, TvShowDetailsDto::setCharacters);
+                        }
+                );
     }
 
     @Override
@@ -54,17 +75,7 @@ public class TvShowServiceImpl implements TvShowService {
             throw new NoSuchTvShowException();
         }
 
-        TvShowDetailsDto tvShowDetailsDto = this.modelMapper.map(tvShow, TvShowDetailsDto.class);
-        Set<EnumDto> genres = new HashSet<>();
-        for (Genre genre : tvShow.getGenres()) {
-            EnumDto enumDto = new EnumDto(genre.name(), genre.getDisplayName());
-            genres.add(enumDto);
-        }
-        tvShowDetailsDto.setGenres(genres);
-        tvShowDetailsDto.setType(new EnumDto(tvShow.getType().name(), tvShow.getType().getDisplayName()));
-        tvShowDetailsDto.setStatus(new EnumDto(tvShow.getStatus().name(), tvShow.getStatus().getDisplayName()));
-
-        return tvShowDetailsDto;
+        return this.tvShowEntityTvShowDetailsDtoTypeMap.map(tvShow);
     }
 
     @Override
@@ -92,6 +103,7 @@ public class TvShowServiceImpl implements TvShowService {
         TvShowEntity tvShow = this.modelMapper.map(tvShowCreateDto, TvShowEntity.class);
         Set<PersonEntity> cast = new HashSet<>();
         Set<PersonEntity> creators = new HashSet<>();
+        Map<String, String> characters = new HashMap<>();
         for (String creatorId : tvShowCreateDto.getCreators()) {
             try {
                 PersonEntity creator = this.personService.getPersonById(creatorId);
@@ -110,8 +122,14 @@ public class TvShowServiceImpl implements TvShowService {
                 throw new NoSuchCastFound();
             }
         }
+        for (Map.Entry<String, Set<String>> characterData : tvShowCreateDto.getCharacters().entrySet()) {
+            String actorId = characterData.getKey();
+            String characterNames = characterData.getValue().stream().map(String::trim).collect(Collectors.joining("\0"));
+            characters.put(actorId, characterNames);
+        }
         tvShow.setCast(cast);
         tvShow.setCreators(creators);
+        tvShow.setCharacters(characters);
         TvShowEntity saved = this.tvShowRepository.saveAndFlush(tvShow);
         return new EntityIdDto(saved.getId());
     }
@@ -165,6 +183,8 @@ public class TvShowServiceImpl implements TvShowService {
             tvShow.setCast(newCast);
             for (PersonEntity actor : newCast)
                 actor.getActing().add(tvShow);
+
+            tvShow.getCharacters().entrySet().removeIf(actorCharacters -> !tvShowUpdateDto.getCast().contains(actorCharacters.getKey()));
         }
         if (tvShowUpdateDto.getCreators() != null) {
             Set<PersonEntity> newCreators = new HashSet<>();
@@ -185,6 +205,16 @@ public class TvShowServiceImpl implements TvShowService {
             tvShow.setCreators(newCreators);
             for (PersonEntity creator : newCreators)
                 creator.getCreating().add(tvShow);
+        }
+        if (tvShowUpdateDto.getCharacters() != null) {
+            Map<String, String> newCharacters = new HashMap<>();
+            for (Map.Entry<String, Set<String>> characterData : tvShowUpdateDto.getCharacters().entrySet()) {
+                String actorId = characterData.getKey();
+                String characterNames = characterData.getValue().stream().map(String::trim).collect(Collectors.joining("\0"));
+                PersonEntity actor = this.personService.getPersonById(actorId); // just so it can throw NoSuchElementException if there isn't an actor with the given id
+                newCharacters.put(actorId, characterNames);
+            }
+            tvShow.setCharacters(newCharacters);
         }
 
         this.tvShowRepository.saveAndFlush(tvShow);

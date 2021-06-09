@@ -1,4 +1,4 @@
-package com.fieryrider.tmdbclone.models.dtos;
+package com.fieryrider.tmdbclone.models.dtos.detail_dtos;
 
 import com.fieryrider.tmdbclone.models.entities.enums.UserRole;
 
