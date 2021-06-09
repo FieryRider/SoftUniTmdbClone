@@ -1,7 +1,9 @@
 package com.fieryrider.tmdbclone.models.entities.enums;
 
 public enum MovieStatus {
-    RELEASED("Released"), IN_PRODUCTION("In Production"), PLANNED("Planned");
+    RELEASED("Released"),
+    IN_PRODUCTION("In Production"),
+    PLANNED("Planned");
 
     private final String displayName;
 
